@@ -1,0 +1,4 @@
+sources:
+  "2.12.1":
+    url: "https://github.com/freetype/freetype.git"
+    tag: "VER-2-12-1" # Because why follow any standards?

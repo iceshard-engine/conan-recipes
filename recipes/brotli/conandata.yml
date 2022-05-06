@@ -1,0 +1,4 @@
+sources:
+  "1.0.9":
+    url: "https://github.com/google/brotli.git"
+    tag: "v1.0.9"
