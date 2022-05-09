@@ -62,4 +62,8 @@ class FreeTypeConanRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
-        self.cpp_info.libs = ['freetype']
+
+        if self.settings.build_type == "Debug":
+          self.cpp_info.libs = ['freetyped']
+        else:
+          self.cpp_info.libs = ['freetype']

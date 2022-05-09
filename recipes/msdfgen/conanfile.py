@@ -45,7 +45,10 @@ class MsdfGenConanRecipe(ConanFile):
     def ice_package(self):
         self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSE")
 
-        self.copy("*.h*", "include/msdfgen/", src="{}/core".format(self._ice.source_dir), keep_path=True)
+        self.copy("*.h*", "include/msdfgen/core", src="{}/core".format(self._ice.source_dir), keep_path=True)
+        self.copy("*.h*", "include/msdfgen/ext", src="{}/ext".format(self._ice.source_dir), keep_path=True)
+        self.copy("*.h*", "include/msdfgen/skia", src="{}/skia".format(self._ice.source_dir), keep_path=True)
+        self.copy("msdfgen.h", "include/msdfgen", src="{}".format(self._ice.source_dir), keep_path=True)
         self.copy("msdfgen-*.h", "include/msdfgen", src="{}".format(self._ice.source_dir), keep_path=True)
 
         build_dir = self._ice.build_dir
@@ -57,4 +60,4 @@ class MsdfGenConanRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
-        self.cpp_info.libs = ['msdfgen']
+        self.cpp_info.libs = ['msdfgen-core', 'msdfgen-ext']
