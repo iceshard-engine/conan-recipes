@@ -1,0 +1,9 @@
+sources:
+  "2.0.9":
+    url: "https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
+  "2.0.12":
+    url: "https://www.libsdl.org/release/SDL2-2.0.12.tar.gz"
+  "2.0.14":
+    url: "https://www.libsdl.org/release/SDL2-2.0.14.tar.gz"
+  "2.0.22":
+    url: "https://www.libsdl.org/release/SDL2-2.0.22.tar.gz"

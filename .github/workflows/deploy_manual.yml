@@ -9,6 +9,7 @@ on:
         type: choice
         options:
         - 'fmt'
+        - 'sdl2'
       version:
         description: 'The library version to be deployed.'
         required: true
