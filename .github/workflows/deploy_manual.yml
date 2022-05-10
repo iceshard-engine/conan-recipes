@@ -1,0 +1,101 @@
+name: Deploy (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      library:
+        description: 'The library recipe to be deployed.'
+        required: true
+        type: choice
+        options:
+        - 'fmt'
+      version:
+        description: 'The library version to be deployed.'
+        required: true
+        type: string
+        default: '1.0.0'
+      channel:
+        description: 'The channel to which we want the package to be deployed.'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+        - stable
+        - dev
+      platform:
+        description: 'The platform that the library should be deployed for.'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+        - all
+        - windows
+        - linux
+      conan_options:
+        description: 'Additional options to be passed to the conan call.'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  deploy-windows-debug:
+    name: Deploy (Windows-Debug)
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
+    with:
+      host: windows-latest
+      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-windows-release:
+    name: Deploy (Windows-Release)
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
+    with:
+      host: windows-latest
+      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-linux-debug:
+    name: Deploy (Linux-Debug)
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
+    with:
+      host: ubuntu-latest
+      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
+      conan_profile: 'gcc-11.0-linux-x86_64'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-linux-release:
+    name: Deploy (Linux-Release)
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
+    with:
+      host: ubuntu-latest
+      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
+      conan_profile: 'gcc-11.0-linux-x86_64'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
