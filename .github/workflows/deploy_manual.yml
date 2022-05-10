@@ -46,6 +46,7 @@ jobs:
       host: windows-latest
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
       conan_upload_options: '--all'
@@ -61,6 +62,7 @@ jobs:
       host: windows-latest
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_upload_options: '--all'
@@ -76,6 +78,7 @@ jobs:
       host: ubuntu-latest
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
       conan_profile: 'gcc-11.0-linux-x86_64'
@@ -92,6 +95,7 @@ jobs:
       host: ubuntu-latest
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_profile: 'gcc-11.0-linux-x86_64'
