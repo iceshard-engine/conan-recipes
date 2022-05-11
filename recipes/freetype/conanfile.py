@@ -40,8 +40,8 @@ class FreeTypeConanRecipe(ConanFile):
       self.ice_run_cmake(definitions)
 
     def ice_package(self):
-        self.copy("docs/FTL.TXT", src=self._ice.source_dir, dst="LICENSES/")
-        self.copy("docs/GPLv2.TXT", src=self._ice.source_dir, dst="LICENSES/")
+        self.copy("docs/FTL.TXT", src=self._ice.source_dir, dst="LICENSES/", keep_path=False)
+        self.copy("docs/GPLv2.TXT", src=self._ice.source_dir, dst="LICENSES/", keep_path=False)
 
         self.copy("*.h", "include/", src="{}/include".format(self._ice.source_dir), keep_path=True)
 
