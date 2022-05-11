@@ -52,7 +52,7 @@ class TracyConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
-        self.cpp_info.libs = ['tracy_client']
+        self.cpp_info.libs = ['TracyClient']
 
         if self.options.tracy_fibers:
             self.cpp_info.defines = ['TRACY_FIBERS']
