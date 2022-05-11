@@ -28,7 +28,7 @@ class TracyConan(ConanFile):
         definitions['TRACY_FIBERS'] = self.options.tracy_fibers
         self.ice_run_cmake(definitions)
 
-    def package(self):
+    def ice_package(self):
         self.copy("LICENSE", src=self._ice.source_dir, dst="LICENSES/")
 
         self.copy("*.h*", "include/tracy/common", src="{}/common".format(self._ice.source_dir), keep_path=True)
@@ -36,8 +36,11 @@ class TracyConan(ConanFile):
         self.copy("Tracy*.hpp", "include/tracy", src="{}".format(self._ice.source_dir), keep_path=True)
         self.copy("Tracy*.h", "include/tracy", src="{}".format(self._ice.source_dir), keep_path=True)
 
-        build_dir = os.path.join(self._ice.build_dir, "../build/{}".format(self.settings.build_type))
+        build_dir = self._ice.build_dir
+
         if self.settings.os == "Windows":
+            build_dir = os.path.join(build_dir, str(self.settings.build_type))
+
             self.copy("*.lib", dst="lib", src=build_dir, keep_path=False)
             if self.options.shared:
                 self.copy("*.dll", dst="bin", src=build_dir, keep_path=False)

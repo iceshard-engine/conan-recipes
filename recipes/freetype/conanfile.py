@@ -19,7 +19,7 @@ class FreeTypeConanRecipe(ConanFile):
     source_dir = "{name}-{version}"
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     # Initialize the package
@@ -45,15 +45,16 @@ class FreeTypeConanRecipe(ConanFile):
 
         self.copy("*.h", "include/", src="{}/include".format(self._ice.source_dir), keep_path=True)
 
-        build_dir = os.path.normpath(self._ice.build_dir + "/../build")
-        build_type = self.settings.build_type
+        build_dir = self._ice.build_dir
 
         if self.settings.os == "Windows":
-            self.copy("*.lib", dst="lib", src="{}/{}".format(build_dir, build_type), keep_path=False)
-            self.copy("*.pdb", dst="lib", src="{}/{}".format(build_dir, build_type), keep_path=False)
+            build_dir = os.path.join(build_dir, str(self.settings.build_type))
+
+            self.copy("*.lib", dst="lib", src=build_dir, keep_path=False)
+            self.copy("*.pdb", dst="lib", src=build_dir, keep_path=False)
 
         if self.settings.os == "Linux":
-            self.copy("*.a", dst="lib", src="{}/{}".format(build_dir, build_type), keep_path=False)
+            self.copy("*.a", dst="lib", src=build_dir, keep_path=False)
 
 
     def package_info(self):
