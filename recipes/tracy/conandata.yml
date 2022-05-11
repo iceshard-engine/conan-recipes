@@ -1,0 +1,10 @@
+sources:
+  "0.7.8":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.7.8"
+  "0.8.0":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.8"
+  "0.8.1":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.8.1"
