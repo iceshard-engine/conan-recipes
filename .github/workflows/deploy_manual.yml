@@ -11,6 +11,7 @@ on:
         - 'fmt'
         - 'sdl2'
         - 'freetype'
+        - 'tracy'
       version:
         description: 'The library version to be deployed.'
         required: true
