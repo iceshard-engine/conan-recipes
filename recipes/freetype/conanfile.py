@@ -3,7 +3,6 @@ import os
 
 class FreeTypeConanRecipe(ConanFile):
     name = "freetype"
-    license = "MIT"
     description = "FreeType is a freely available software library to render fonts."
     url = "https://github.com/freetype/freetype"
 
@@ -12,7 +11,6 @@ class FreeTypeConanRecipe(ConanFile):
 
     options = {
       "fPIC":[True, False]
-      # TODO: "shared", read: https://github.com/freetype/freetype/blob/master/CMakeLists.txt
     }
     default_options = {
       "fPIC": True
@@ -23,8 +21,6 @@ class FreeTypeConanRecipe(ConanFile):
     # Iceshard conan tools
     python_requires = "conan-iceshard-tools/0.8.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
-
-    # TODO: requires = "brotli/1.0.9@iceshard/stable"
 
     # Initialize the package
     def init(self):
@@ -41,11 +37,11 @@ class FreeTypeConanRecipe(ConanFile):
     def ice_build(self):
       definitions = {}
       definitions['SKIP_INSTALL_ALL'] = True
-      # TODO: definitions['FT_REQUIRE_BROTLI'] = True
-      self.ice_run_cmake()
+      self.ice_run_cmake(definitions)
 
     def ice_package(self):
-        self.copy("LICENSE", src=self._ice.source_dir, dst="LICENSE/")
+        self.copy("docs/FTL.TXT", src=self._ice.source_dir, dst="LICENSES/")
+        self.copy("docs/GPLv2.TXT", src=self._ice.source_dir, dst="LICENSES/")
 
         self.copy("*.h", "include/", src="{}/include".format(self._ice.source_dir), keep_path=True)
 
