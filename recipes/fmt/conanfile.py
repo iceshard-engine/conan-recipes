@@ -33,6 +33,8 @@ class FmtConan(ConanFile):
         definitions['FMT_INSTALL'] = False
         definitions['FMT_TEST'] = False
         definitions['FMT_DOC'] = False
+        if self.settings.os != "Windows":
+            definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         self.ice_run_cmake(definitions)
 
     def ice_package(self):
