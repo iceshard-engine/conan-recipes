@@ -2,7 +2,7 @@ from conans import ConanFile, Meson, tools
 import os
 
 class MsdfAtlasGenConanRecipe(ConanFile):
-    name = "msdf-atlas-gen"
+    name = "msdf_atlas_gen"
     license = "MIT"
     description = "MSDF font atlas generator."
     url = "https://github.com/Chlumsky/msdf-atlas-gen"
@@ -52,11 +52,7 @@ class MsdfAtlasGenConanRecipe(ConanFile):
     def ice_package(self):
         self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSE")
 
-        self.copy("*.h*", "include/msdfgen/core", src="{}/core".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.h*", "include/msdfgen/ext", src="{}/ext".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.h*", "include/msdfgen/skia", src="{}/skia".format(self._ice.source_dir), keep_path=True)
-        self.copy("msdfgen.h", "include/msdfgen", src="{}".format(self._ice.source_dir), keep_path=True)
-        self.copy("msdfgen-*.h", "include/msdfgen", src="{}".format(self._ice.source_dir), keep_path=True)
+        self.copy("*.h*", "include/msdf-atlas-gen", src="{}/msdf-atlas-gen".format(self._ice.source_dir), keep_path=True)
 
         build_dir = self._ice.build_dir
         if self.settings.os == "Windows":
@@ -69,4 +65,8 @@ class MsdfAtlasGenConanRecipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
-        self.cpp_info.libs = ['msdfgen-core', 'msdfgen-ext']
+        self.cpp_info.includedirs = [
+            'include',
+            os.path.join(self.dependencies['msdfgen'].package_folder, "include/msdfgen")
+        ]
+        self.cpp_info.libs = ['msdf-atlas-gen']
