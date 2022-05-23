@@ -12,6 +12,8 @@ on:
         - 'sdl2'
         - 'freetype'
         - 'tracy'
+        - 'msdfgen'
+        - 'msdf_atlas_gen'
       version:
         description: 'The library version to be deployed.'
         required: true
