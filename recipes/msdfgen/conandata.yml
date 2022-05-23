@@ -4,5 +4,5 @@ sources:
     tag: "v1.9.2"
 patches:
   "1.9.2":
-    - patch_file: "patches/lowercase_freetype.patch"
-      description: "Replaces the case for the Freetype library to lowercase..."
+    - patch_file: "patches/conan_basic_setup.patch"
+      description: "Updates CMake file to make a basic conan setup."

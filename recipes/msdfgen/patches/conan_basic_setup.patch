@@ -4,7 +4,7 @@ index 2217d76..bbaf7cf 100644
 +++ b/CMakeLists.txt
 @@ -1,6 +1,9 @@
  cmake_minimum_required(VERSION 3.10)
-
+ 
  project(msdfgen VERSION 1.9 LANGUAGES CXX)
 +include(${CMAKE_BINARY_DIR}/../conanbuildinfo.cmake)
 +conan_basic_setup()

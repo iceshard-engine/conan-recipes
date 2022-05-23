@@ -1,0 +1,29 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a3bb34..2a3204a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,6 +11,8 @@ if(NOT MSDF_ATLAS_GEN_MSDFGEN_EXTERNAL)
+ endif()
+ 
+ project(msdf-atlas-gen VERSION 1.2 LANGUAGES CXX)
++include(${CMAKE_BINARY_DIR}/../conanbuildinfo.cmake)
++conan_basic_setup()
+ 
+ find_package(Threads REQUIRED)
+ 
+@@ -31,12 +33,13 @@ target_include_directories(msdf-atlas-gen
+     INTERFACE
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+     PRIVATE
+-        ${CMAKE_CURRENT_SOURCE_DIR}/msdfgen/include # for lodepng.h
++        ${MSDFGEN_INCLUDE_DIR}/msdfgen
++        ${MSDFGEN_INCLUDE_DIR}/msdfgen/include # for lodepng.h
+         ${CMAKE_CURRENT_SOURCE_DIR}/artery-font-format
+ )
+ 
+ target_compile_features(msdf-atlas-gen PUBLIC cxx_std_11)
+-target_link_libraries(msdf-atlas-gen PUBLIC Threads::Threads msdfgen::msdfgen)
++target_link_libraries(msdf-atlas-gen PUBLIC Threads::Threads msdfgen)
+ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT msdf-atlas-gen)
+ 
+ # msdf-atlas-gen standalone executable
