@@ -40,7 +40,11 @@ class MsdfGenConanRecipe(ConanFile):
 
     def ice_build(self):
         self.ice_apply_patches()
-        self.ice_run_cmake()
+        
+        definitions = { }
+        definitions['MSDFGEN_BUILD_STANDALONE'] = False
+        definitions['MSDFGEN_INSTALL'] = False
+        self.ice_run_cmake(definitions)
 
     def ice_package(self):
         self.copy("Findmsdfgen.cmake", src=".", dst=".")
