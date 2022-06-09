@@ -1,0 +1,4 @@
+sources:
+  "1.13.2":
+    url: "https://github.com/svgpp/rapidxml_ns.git"
+    tag: "v1.13.2"
