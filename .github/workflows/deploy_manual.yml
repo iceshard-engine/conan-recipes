@@ -8,13 +8,14 @@ on:
         required: true
         type: choice
         options:
+        - 'catch2'
         - 'fmt'
-        - 'sdl2'
         - 'freetype'
-        - 'tracy'
         - 'msdfgen'
         - 'msdf_atlas_gen'
         - 'rapidxml_ns'
+        - 'sdl2'
+        - 'tracy'
       version:
         description: 'The library version to be deployed.'
         required: true

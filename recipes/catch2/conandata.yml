@@ -1,0 +1,7 @@
+sources:
+  "2.13.2":
+    url: "https://github.com/catchorg/Catch2.git"
+    tag: "v2.13.2"
+  "2.13.9":
+    url: "https://github.com/catchorg/Catch2.git"
+    tag: "v2.13.9"
