@@ -27,10 +27,10 @@ class LuaConan(ConanFile):
     def ice_build(self):
         self.ice_generate()
         if self.settings.compiler == "Visual Studio":
-            self.ice_run_msbuild("Lua.sln", self.settings.build_type)
+            self.ice_run_msbuild("Lua.sln")
 
         else:
-            self.ice_run_make(self.settings.build_type)
+            self.ice_run_make()
 
     def ice_package(self):
 
