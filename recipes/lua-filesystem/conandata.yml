@@ -1,0 +1,4 @@
+sources:
+  "1.8.0":
+    url: "https://github.com/keplerproject/luafilesystem.git"
+    tag: "v1_8_0"
