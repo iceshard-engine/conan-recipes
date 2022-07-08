@@ -5,7 +5,7 @@ import os
 class LuaConan(ConanFile):
     name = "lua"
     license = "MIT"
-    description = "Lua conan package"
+    description = "Lua is a powerful, efficient, lightweight, embeddable scripting language."
     url = "https://www.lua.org/home.html"
 
     settings = "os", "build_type", "compiler", "arch"

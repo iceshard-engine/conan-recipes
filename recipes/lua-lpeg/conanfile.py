@@ -4,7 +4,7 @@ import os
 class LuaLpegConan(ConanFile):
     name = "lua-lpeg"
     license = "MIT"
-    description = "lua Lpeg."
+    description = "LPeg is a pattern-matching library for Lua, based on Parsing Expression Grammars (PEGs)."
     url = "https://github.com/LuaDist/lpeg"
 
     settings = "os", "build_type", "compiler", "arch"
