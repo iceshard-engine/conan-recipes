@@ -90,7 +90,7 @@ jobs:
     uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
     with:
-      host: ubuntu-latest
+      host: ubuntu-22.04
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
       conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
@@ -107,7 +107,7 @@ jobs:
     uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
     with:
-      host: ubuntu-latest
+      host: ubuntu-22.04
       conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
       conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
