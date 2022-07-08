@@ -11,6 +11,9 @@ on:
         - 'catch2'
         - 'fmt'
         - 'freetype'
+        - 'lua'
+        - 'lua-filesystem'
+        - 'lua-lpeg'
         - 'msdfgen'
         - 'msdf_atlas_gen'
         - 'rapidxml_ns'
@@ -50,7 +53,7 @@ on:
         required: false
         type: string
         default: ''
-        
+
 
 jobs:
   deploy-windows-debug:
