@@ -38,11 +38,19 @@ on:
         - all
         - windows
         - linux
+      conan_profile:
+        description: 'The conan profile to be used when building the package.'
+        required: false
+        type: choice
+        options:
+        - 'gcc-11.0-linux-x86_64'
+        - 'gcc-12.0-linux-x86_64'
       conan_options:
         description: 'Additional options to be passed to the conan call.'
         required: false
         type: string
         default: ''
+        
 
 jobs:
   deploy-windows-debug:
@@ -88,7 +96,7 @@ jobs:
       conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
-      conan_profile: 'gcc-11.0-linux-x86_64'
+      conan_profile: '${{ github.event.inputs.conan_profile }}'
       conan_upload_options: '--all'
     secrets:
       conan_user: 'iceshard'
@@ -105,7 +113,7 @@ jobs:
       conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
-      conan_profile: 'gcc-11.0-linux-x86_64'
+      conan_profile: '${{ github.event.inputs.conan_profile }}'
       conan_upload_options: '--all'
     secrets:
       conan_user: 'iceshard'
