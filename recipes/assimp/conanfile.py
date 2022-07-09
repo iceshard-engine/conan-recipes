@@ -73,7 +73,7 @@ class AssimpConan(ConanFile):
         "with_terragen": "ASSIMP_BUILD_TERRAGEN_IMPORTER",
         "with_x": "ASSIMP_BUILD_X_IMPORTER",
         # "with_x3d": "ASSIMP_BUILD_X3D_IMPORTER",
-        "with_xgl": "ASSIMP_BUILD_XGL_IMPORTER",
+        # "with_xgl": "ASSIMP_BUILD_XGL_IMPORTER",
     }
     options.update(dict.fromkeys(_format_option_map, [True, False]))
     default_options.update(dict.fromkeys(_format_option_map, True))
