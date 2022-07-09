@@ -1,0 +1,13 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcafb64..4353128 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,6 +52,8 @@ IF(HUNTER_ENABLED)
+ ENDIF(HUNTER_ENABLED)
+ 
+ PROJECT( Assimp VERSION 5.0.0 )
++include(${CMAKE_BINARY_DIR}/../conanbuildinfo.cmake)
++conan_basic_setup()
+ 
+ # All supported options ###############################################
+ 
