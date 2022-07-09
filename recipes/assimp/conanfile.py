@@ -68,7 +68,7 @@ class AssimpConan(ConanFile):
         "with_q3d": "ASSIMP_BUILD_Q3D_IMPORTER",
         "with_raw": "ASSIMP_BUILD_RAW_IMPORTER",
         "with_sib": "ASSIMP_BUILD_SIB_IMPORTER",
-        "with_smd": "ASSIMP_BUILD_SMD_IMPORTER",
+        # "with_smd": "ASSIMP_BUILD_SMD_IMPORTER",
         "with_stl": "ASSIMP_BUILD_STL_IMPORTER",
         "with_terragen": "ASSIMP_BUILD_TERRAGEN_IMPORTER",
         "with_x": "ASSIMP_BUILD_X_IMPORTER",
@@ -110,7 +110,7 @@ class AssimpConan(ConanFile):
         definitions["ASSIMP_BUILD_ASSIMP_TOOLS"] = False
         definitions["ASSIMP_BUILD_TESTS"] = False
         definitions["ASSIMP_BUILD_SAMPLES"] = False
-        definitions["ASSIMP_BUILD_ZLIB"] = True
+        definitions["ASSIMP_BUILD_ZLIB"] = False
         definitions["ASSIMP_INSTALL_PDB"] = False
 
         # [?] There is not a single reason to have this to true in a pre-build package with explicit profiles set.
@@ -128,7 +128,7 @@ class AssimpConan(ConanFile):
 
         self.ice_run_cmake(definitions=definitions)
 
-    def package(self):
+    def ice_package(self):
         self.copy("LICENSE.md", dst="LICENSES", keep_path=False)
         self.copy("LICENSE", dst="LICENSES", src=self._ice.source_dir, keep_path=False)
 
@@ -140,8 +140,6 @@ class AssimpConan(ConanFile):
         if self.settings.os == "Windows":
             if self.options.shared == True:
                 self.copy("*.dll", dst="bin", src="{}/bin".format(self._ice.build_dir), keep_path=False)
-            else:
-                self.copy("zlib*.dll", dst="bin", src="{}/bin".format(self._ice.build_dir), keep_path=False)
             self.copy("*.lib", dst="lib", src="{}/lib".format(self._ice.build_dir), keep_path=False)
 
         if self.settings.os == "Linux":
@@ -155,13 +153,19 @@ class AssimpConan(ConanFile):
         self.cpp_info.includedirs.append("include_{}".format(self.settings.build_type))
 
         if self.settings.os == "Windows":
+            compiler_ver = "vcUnknown"
+            if self.settings.compiler.version == "16":
+                compiler_ver = "vc142"
+            if self.settings.compiler.version == "17":
+                compiler_ver = "vc143"
+
             if self.settings.build_type == "Debug":
-                self.cpp_info.libs = ["assimp-vc142-mtd", "IrrXMLd", "zlibd"]
+                self.cpp_info.libs = ["assimp-{}-mtd".format(compiler_ver)]
             else:
-                self.cpp_info.libs = ["assimp-vc142-mt", "IrrXML", "zlib"]
+                self.cpp_info.libs = ["assimp-{}-mt".format(compiler_ver)]
         if self.settings.os == "Linux":
             self.cpp_info.libdirs.append("bin")
             if self.settings.build_type == "Debug":
-                self.cpp_info.libs = ["assimpd", "IrrXMLd", "zlibd"]
+                self.cpp_info.libs = ["assimpd"]
             else:
-                self.cpp_info.libs = ["assimp", "IrrXML", "zlib"]
+                self.cpp_info.libs = ["assimp"]
