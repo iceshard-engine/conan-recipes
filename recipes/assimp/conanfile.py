@@ -25,59 +25,6 @@ class AssimpConan(ConanFile):
         "fPIC": True
     }
 
-    # Format available options
-    _format_option_map = {
-        "with_3d": "ASSIMP_BUILD_3D_IMPORTER",
-        "with_3ds": "ASSIMP_BUILD_3DS_IMPORTER",
-        "with_3mf": "ASSIMP_BUILD_3MF_IMPORTER",
-        "with_ac": "ASSIMP_BUILD_AC_IMPORTER",
-        "with_amf": "ASSIMP_BUILD_AMF_IMPORTER",
-        "with_ase": "ASSIMP_BUILD_ASE_IMPORTER",
-        "with_assbin": "ASSIMP_BUILD_ASSBIN_IMPORTER",
-        "with_assxml": "ASSIMP_BUILD_ASSXML_IMPORTER",
-        "with_b3d": "ASSIMP_BUILD_B3D_IMPORTER",
-        "with_blend": "ASSIMP_BUILD_BLEND_IMPORTER",
-        "with_bvh": "ASSIMP_BUILD_BVH_IMPORTER",
-        "with_cob": "ASSIMP_BUILD_COB_IMPORTER",
-        "with_collada": "ASSIMP_BUILD_COLLADA_IMPORTER",
-        "with_csm": "ASSIMP_BUILD_CSM_IMPORTER",
-        "with_dxf": "ASSIMP_BUILD_DXF_IMPORTER",
-        "with_fbx": "ASSIMP_BUILD_FBX_IMPORTER",
-        "with_gltf": "ASSIMP_BUILD_GLTF_IMPORTER",
-        "with_hmp": "ASSIMP_BUILD_HMP_IMPORTER",
-        "with_ifc": "ASSIMP_BUILD_IFC_IMPORTER",
-        "with_irr": "ASSIMP_BUILD_IRR_IMPORTER",
-        "with_irrmesh": "ASSIMP_BUILD_IRRMESH_IMPORTER",
-        "with_lwo": "ASSIMP_BUILD_LWO_IMPORTER",
-        "with_lws": "ASSIMP_BUILD_LWS_IMPORTER",
-        "with_md2": "ASSIMP_BUILD_MD2_IMPORTER",
-        "with_md3": "ASSIMP_BUILD_MD3_IMPORTER",
-        "with_md5": "ASSIMP_BUILD_MD5_IMPORTER",
-        "with_mdc": "ASSIMP_BUILD_MDC_IMPORTER",
-        "with_mdl": "ASSIMP_BUILD_MDL_IMPORTER",
-        "with_mmd": "ASSIMP_BUILD_MMD_IMPORTER",
-        "with_ms3d": "ASSIMP_BUILD_MS3D_IMPORTER",
-        "with_ndo": "ASSIMP_BUILD_NDO_IMPORTER",
-        "with_nff": "ASSIMP_BUILD_NFF_IMPORTER",
-        "with_obj": "ASSIMP_BUILD_OBJ_IMPORTER",
-        "with_off": "ASSIMP_BUILD_OFF_IMPORTER",
-        "with_ogre": "ASSIMP_BUILD_OGRE_IMPORTER",
-        "with_opengex": "ASSIMP_BUILD_OPENGEX_IMPORTER",
-        "with_ply": "ASSIMP_BUILD_PLY_IMPORTER",
-        "with_q3bsp": "ASSIMP_BUILD_Q3BSP_IMPORTER",
-        "with_q3d": "ASSIMP_BUILD_Q3D_IMPORTER",
-        "with_raw": "ASSIMP_BUILD_RAW_IMPORTER",
-        "with_sib": "ASSIMP_BUILD_SIB_IMPORTER",
-        # "with_smd": "ASSIMP_BUILD_SMD_IMPORTER",
-        "with_stl": "ASSIMP_BUILD_STL_IMPORTER",
-        "with_terragen": "ASSIMP_BUILD_TERRAGEN_IMPORTER",
-        "with_x": "ASSIMP_BUILD_X_IMPORTER",
-        # "with_x3d": "ASSIMP_BUILD_X3D_IMPORTER",
-        # "with_xgl": "ASSIMP_BUILD_XGL_IMPORTER",
-    }
-    options.update(dict.fromkeys(_format_option_map, [True, False]))
-    default_options.update(dict.fromkeys(_format_option_map, True))
-
     exports_sources = ["patches/*"]
     requires = "zlib/1.2.11@iceshard/stable"
 
@@ -103,7 +50,6 @@ class AssimpConan(ConanFile):
         self.ice_apply_patches()
 
         definitions = { }
-        definitions["SYSTEM_IRRXML"] = not self.options.internal_irrxml
         definitions["BUILD_SHARED_LIBS"] = self.options.shared
         definitions["ASSIMP_DOUBLE_PRECISION"] = self.options.double_precision
         definitions["ASSIMP_NO_EXPORT"] = self.options.no_export
@@ -122,10 +68,7 @@ class AssimpConan(ConanFile):
         if self.settings.os != "Windows":
             definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
 
-        definitions["ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT"] = False
-        for option, definition in self._format_option_map.items():
-            definitions[definition] = bool(getattr(self.options, option))
-
+        definitions["ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT"] = True
         self.ice_run_cmake(definitions=definitions)
 
     def ice_package(self):
