@@ -19,3 +19,5 @@ patches:
   "5.2.4":
     - patch_file: patches/gltf2_exporter_524.patch
       patch_description: "Fixes a single line of code where gcc-12 reports an error due to comparing two arrays directlu. type[N] == type[N]"
+    - patch_file: patches/cmake_gcc12_fixes_524.patch
+      patch_description: "Fixes issues with -Wall and 'Warnings as Errors' on gcc12"
