@@ -16,3 +16,6 @@ patches:
   "5.1.3":
     - patch_file: patches/conan_dependency_setup_513.patch
       patch_description: Updates the CMakeLists.txt to use Conan as a package manager. (Required to properly setup zlib dependency)
+  "5.2.4":
+    - patch_file: patches/gltf2_exporter_524.patch
+      patch_description: "Fixes a single line of code where gcc-12 reports an error due to comparing two arrays directlu. type[N] == type[N]"
