@@ -5,3 +5,6 @@ sources:
   "7.0.3":
     url: "https://github.com/fmtlib/fmt.git"
     tag: "7.0.3"
+  "9.0.0":
+    url: "https://github.com/fmtlib/fmt.git"
+    tag: "9.0.0"
