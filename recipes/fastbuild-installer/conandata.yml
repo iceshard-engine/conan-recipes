@@ -1,0 +1,31 @@
+sources:
+  Windows:
+    "0.99":
+      url: "https://fastbuild.org/downloads/v0.99/FASTBuild-Windows-x64-v0.99.zip"
+    "1.00":
+      url: "https://fastbuild.org/downloads/v1.00/FASTBuild-Windows-x64-v1.00.zip"
+    "1.02":
+      url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Windows-x64-v1.02.zip"
+    "1.03":
+      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Windows-x64-v1.03.zip"
+    "1.04":
+      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Windows-x64-v1.04.zip"
+    "1.05":
+      url: "https://fastbuild.org/downloads/v1.05/FASTBuild-Windows-x64-v1.05.zip"
+    "1.06":
+      url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Windows-x64-v1.06.zip"
+    "1.07":
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Windows-x64-v1.07.zip"
+  Linux:
+    "1.02":
+      url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Linux-x64-v1.02.zip"
+    "1.03":
+      url: "https://fastbuild.org/downloads/v1.03/FASTBuild-Linux-x64-v1.03.zip"
+    "1.04":
+      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Linux-x64-v1.04.zip"
+    "1.05":
+      url: "https://fastbuild.org/downloads/v1.05/FASTBuild-Linux-x64-v1.05.zip"
+    "1.06":
+      url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Linux-x64-v1.06.zip"
+    "1.07":
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Linux-x64-v1.07.zip"
