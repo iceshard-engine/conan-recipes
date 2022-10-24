@@ -1,0 +1,16 @@
+sources:
+  "0.5.0":
+    "moonscript":
+      url: "https://github.com/leafo/moonscript.git"
+      commit: "0ac82e3af5bbb299f8e2b4d542cb3a0daafaba6c" # 0.5.0
+    # Due to lack of time (in the past and present) this package is a monstrous creation.
+    # It still does its job well, but we should separate these into separate packages.
+    "alt-getopt":
+      url: "https://github.com/cheusov/lua-alt-getopt.git"
+      tag: "0.8.0"
+    "argparse":
+      url: "https://github.com/luarocks/argparse.git"
+      tag: "0.7.1"
+    "jsonlua":
+      url: "https://github.com/rxi/json.lua.git"
+      tag: "v0.1.2"

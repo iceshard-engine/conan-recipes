@@ -18,6 +18,7 @@ on:
         - 'lua'
         - 'lua-filesystem'
         - 'lua-lpeg'
+        - 'moonscript-installer'
         - 'msdfgen'
         - 'msdf_atlas_gen'
         - 'premake-generator'
