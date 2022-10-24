@@ -20,6 +20,8 @@ on:
         - 'lua-lpeg'
         - 'msdfgen'
         - 'msdf_atlas_gen'
+        - 'premake-generator'
+        - 'premake-installer'
         - 'rapidxml_ns'
         - 'sdl2'
         - 'tracy'
