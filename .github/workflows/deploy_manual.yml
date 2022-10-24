@@ -10,6 +10,7 @@ on:
         options:
         - 'assimp'
         - 'catch2'
+        - 'conan-iceshard-tools'
         - 'fastbuild-generator'
         - 'fastbuild-installer'
         - 'fmt'
