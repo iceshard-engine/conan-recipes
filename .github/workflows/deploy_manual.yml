@@ -11,6 +11,7 @@ on:
         - 'assimp'
         - 'catch2'
         - 'fastbuild-generator'
+        - 'fastbuild-installer'
         - 'fmt'
         - 'freetype'
         - 'imgui'
