@@ -2,3 +2,7 @@ sources:
   "7.0.3":
     url: "https://github.com/slembcke/Chipmunk2D.git"
     tag: "Chipmunk-7.0.3"
+  "7.0.3+":
+    url: "https://github.com/slembcke/Chipmunk2D.git"
+    branch: "master"
+    commit: "7d10641155864bcf0e7f4c7cf1f0327ec7c1d90d"
