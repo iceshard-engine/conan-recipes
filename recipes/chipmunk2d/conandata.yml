@@ -1,0 +1,4 @@
+sources:
+  "7.0.3":
+    url: "https://github.com/slembcke/Chipmunk2D.git"
+    tag: "Chipmunk-7.0.3"
