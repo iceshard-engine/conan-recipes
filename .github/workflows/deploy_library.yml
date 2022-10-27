@@ -1,5 +1,5 @@
 name: Deploy Library (manual)
-run-name: Deploy ${{ inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
+run-name: Deploy ${{ inputs.library }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
 on:
   workflow_dispatch:
