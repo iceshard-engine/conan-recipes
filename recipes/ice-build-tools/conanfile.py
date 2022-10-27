@@ -10,37 +10,37 @@ class IceBuildToolsConan(ConanFile):
     settings = "os"
     requires = "moonscript-installer/0.5.0@iceshard/stable"
 
-    source_folder = "{name}-{version}"
     exports_sources = [ "source/*", "scripts/*", "LICENSE" ]
 
     def package_id(self):
         del self.info.settings.os
 
     def source(self):
-        self.source_folder = self.source_folder.format(name=self.name, version=self.version)
+        source_folder = "{}-{}".format(self.name, self.version)
         source_info = self.conan_data["sources"][self.version]
 
         if "branch" in source_info:
-            git = tools.Git(folder=self.source_folder)
+            git = tools.Git(folder=source_folder)
             git.clone(source_info["url"], source_info["branch"])
             if "commit" in source_info:
                 git.checkout(source_info["commit"])
         elif "tag" in source_info:
-            git = tools.Git(folder=self.source_folder)
+            git = tools.Git(folder=source_folder)
             git.clone(source_info["url"], source_info["tag"])
 
     def build(self):
-        with tools.chdir(self.source_folder):
+        with tools.chdir("{}-{}".format(self.name, self.version)):
             if self.settings.os == "Windows":
                 self.run("%MOONC_SCRIPT% source/ice -t build")
             if self.settings.os == "Linux":
                 self.run("lua $MOONC_SCRIPT source/ice -t build")
 
     def package(self):
-        self.copy("LICENSE", src=".", dst=".", keep_path=False)
-        self.copy("*.lua", src="build/", dst="scripts/lua/", keep_path=True)
-        self.copy("*.*", src="scripts/shell/", dst="scripts/shell/", keep_path=False)
-        self.copy("*.bff", src="scripts/fastbuild/", dst="scripts/fastbuild/", keep_path=True)
+        source_folder = "{}-{}".format(self.name, self.version)
+        self.copy("LICENSE", src=source_folder, dst="LICENSE", keep_path=False)
+        self.copy("*.lua", src=source_folder + "/build/", dst="scripts/lua/", keep_path=True)
+        self.copy("*.*", src=source_folder + "/scripts/shell/", dst="scripts/shell/", keep_path=False)
+        self.copy("*.bff", src=source_folder + "/scripts/fastbuild/", dst="scripts/fastbuild/", keep_path=True)
 
     def package_info(self):
         self.env_info.LUA_PATH.append(os.path.join(self.package_folder, "scripts/lua/?.lua"))
