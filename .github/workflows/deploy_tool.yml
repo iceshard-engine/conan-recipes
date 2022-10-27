@@ -1,0 +1,80 @@
+name: Deploy Tool (manual)
+run-name: Deploy ${{ inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tool:
+        description: 'The tool recipe to be deployed.'
+        required: true
+        type: choice
+        options:
+        - 'conan-iceshard-tools'
+        - 'fastbuild-generator'
+        - 'fastbuild-installer'
+        - 'ice-build-tools'
+        - 'moonscript-installer'
+        - 'premake-generator'
+        - 'premake-installer'
+      version:
+        description: 'The library version to be deployed.'
+        required: true
+        type: string
+        default: '1.0.0'
+      channel:
+        description: 'The channel to which we want the package to be deployed.'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+        - stable
+        - dev
+      platform:
+        description: 'The platform that the library should be deployed for.'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+        - all
+        - windows
+        - linux
+      conan_options:
+        description: 'Additional options to be passed to the conan call.'
+        required: false
+        type: string
+        default: ''
+
+
+jobs:
+  deploy-windows-release:
+    name: 'Deploy ${{ github.event.inputs.tool }} (Windows)'
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
+    with:
+      host: windows-latest
+      conan_package: '${{ github.event.inputs.tool }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.tool }}'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-linux-release:
+    name: 'Deploy ${{ github.event.inputs.tool }} (Linux)'
+    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
+    with:
+      host: ubuntu-22.04
+      conan_package: '${{ github.event.inputs.tool }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_upstream_remote: 'conan-iceshard'
+      conan_recipe_location: 'recipes/${{ github.event.inputs.tool }}'
+      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
+      conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
+      conan_profile: 'default'
+      conan_upload_options: '--all'
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}

@@ -1,4 +1,5 @@
-name: Deploy (manual)
+name: Deploy Library (manual)
+run-name: Deploy ${{ inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
 on:
   workflow_dispatch:
@@ -11,20 +12,14 @@ on:
         - 'assimp'
         - 'catch2'
         - 'chipmunk2d'
-        - 'conan-iceshard-tools'
-        - 'fastbuild-generator'
-        - 'fastbuild-installer'
         - 'fmt'
         - 'freetype'
         - 'imgui'
         - 'lua'
         - 'lua-filesystem'
         - 'lua-lpeg'
-        - 'moonscript-installer'
         - 'msdfgen'
         - 'msdf_atlas_gen'
-        - 'premake-generator'
-        - 'premake-installer'
         - 'rapidxml_ns'
         - 'sdl2'
         - 'tracy'
@@ -55,8 +50,8 @@ on:
         required: false
         type: choice
         options:
-        - 'gcc-11.0-linux-x86_64'
         - 'gcc-12.0-linux-x86_64'
+        - 'gcc-11.0-linux-x86_64'
       conan_options:
         description: 'Additional options to be passed to the conan call.'
         required: false
