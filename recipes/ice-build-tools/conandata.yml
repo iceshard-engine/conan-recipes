@@ -1,0 +1,8 @@
+sources:
+  "0.7.5":
+    url: "https://github.com/iceshard-engine/ice-build-tools"
+    branch: "master"
+    commit: "371e42c791146dce8cfcd7ac6175bd351f1849b8"
+  "0.8.0":
+    url: "https://github.com/iceshard-engine/ice-build-tools"
+    tag: "v0.8.0"
