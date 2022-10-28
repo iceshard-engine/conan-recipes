@@ -7,7 +7,7 @@ _**Note:** Currently no pull requests are accepted as the workflows only upload 
 
 ## Accessing the packages
 
-If you fancy to access our recipes and/or packages please see [iceshard-engine/conan-config](/iceshard-engine/conan-config) for more details.
+If you fancy to access our recipes and/or packages please see [iceshard-engine/conan-config](https://github.com/iceshard-engine/conan-config) for more details.
 
 ## The '.gitattributes'
 
