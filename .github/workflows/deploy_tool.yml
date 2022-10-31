@@ -12,7 +12,7 @@ on:
         - 'conan-iceshard-tools'
         - 'fastbuild-generator'
         - 'fastbuild-installer'
-        - 'ice-build-tools'
+        - 'ice-build-tools-proxy'
         - 'moonscript-installer'
         - 'premake-generator'
         - 'premake-installer'
@@ -43,6 +43,11 @@ on:
         required: false
         type: string
         default: ''
+      conan_deploy_package:
+        description: 'The package to be deployed from the workflow. May be different that the package to be build.'
+        required: false
+        type: string
+        default: ''
 
 
 jobs:
@@ -53,6 +58,7 @@ jobs:
     with:
       host: windows-latest
       conan_package: '${{ github.event.inputs.tool }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_deploy_package: ${{ github.event.inputs.conan_deploy_package }}
       conan_upstream_remote: 'conan-iceshard'
       conan_recipe_location: 'recipes/${{ github.event.inputs.tool }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
@@ -69,6 +75,7 @@ jobs:
     with:
       host: ubuntu-22.04
       conan_package: '${{ github.event.inputs.tool }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_deploy_package: ${{ github.event.inputs.conan_deploy_package }}
       conan_upstream_remote: 'conan-iceshard'
       conan_recipe_location: 'recipes/${{ github.event.inputs.tool }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
