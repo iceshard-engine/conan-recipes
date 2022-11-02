@@ -16,13 +16,15 @@ class AssimpConan(ConanFile):
         "no_export": [True, False],
         "internal_irrxml": [True, False],
         "fPIC": [True, False],
+        "strip_symbols":[True, False]
     }
     default_options = {
         "shared":True,
         "double_precision": False,
         "no_export": False,
         "internal_irrxml": True,
-        "fPIC": True
+        "fPIC": True,
+        "strip_symbols":False
     }
 
     exports_sources = ["patches/*"]
@@ -71,6 +73,13 @@ class AssimpConan(ConanFile):
         definitions["ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT"] = True
         self.ice_run_cmake(definitions=definitions)
 
+        # Strip symbols on unix if requested
+        if self.options.strip_symbols == True:
+            if self.settings.build_type == "Debug":
+                self.run("strip ../build/bin/libassimpd.so")
+            else:
+                self.run("strip ../build/bin/libassimp.so")
+
     def ice_package(self):
         self.copy("LICENSE.md", dst="LICENSES", keep_path=False)
         self.copy("LICENSE", dst="LICENSES", src=self._ice.source_dir, keep_path=False)
@@ -86,7 +95,7 @@ class AssimpConan(ConanFile):
             self.copy("*.lib", dst="lib", src="{}/lib".format(self._ice.build_dir), keep_path=False)
 
         if self.settings.os == "Linux":
-            self.copy("*.so", dst="bin", src="{}/lib".format(self._ice.build_dir), keep_path=False)
+            self.copy("*.so*", dst="bin", src="{}/bin".format(self._ice.build_dir), keep_path=False)
             self.copy("*.a", dst="lib", src="{}/lib".format(self._ice.build_dir), keep_path=False)
 
     def package_info(self):
