@@ -75,11 +75,12 @@ class AssimpConan(ConanFile):
         self.ice_run_cmake(definitions=definitions)
 
         # Strip symbols on unix if requested
-        if self.options.strip_symbols == True:
-            if self.settings.build_type == "Debug":
-                self.run("strip ../build/bin/libassimpd.so")
-            else:
-                self.run("strip ../build/bin/libassimp.so")
+        if self.settings.os == "Linux":
+            if self.options.strip_symbols == True:
+                if self.settings.build_type == "Debug":
+                    self.run("strip ../build/bin/libassimpd.so")
+                else:
+                    self.run("strip ../build/bin/libassimp.so")
 
     def ice_package(self):
         self.copy("LICENSE.md", dst="LICENSES", keep_path=False)
