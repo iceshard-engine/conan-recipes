@@ -16,7 +16,7 @@ class AssimpConan(ConanFile):
         "no_export": [True, False],
         "internal_irrxml": [True, False],
         "fPIC": [True, False],
-        "strip_symbols":[True, False]
+        "strip_symbols": [True, False]
     }
     default_options = {
         "shared":True,
@@ -24,7 +24,7 @@ class AssimpConan(ConanFile):
         "no_export": False,
         "internal_irrxml": True,
         "fPIC": True,
-        "strip_symbols":False
+        "strip_symbols": True
     }
 
     exports_sources = ["patches/*"]
@@ -45,6 +45,7 @@ class AssimpConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
+            del self.options.strip_symbols
 
     # Build both the debug and release builds
     def ice_build(self):
