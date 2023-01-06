@@ -20,6 +20,8 @@ class PremakeInstallerConan(ConanFile):
             self.copy("premake5.exe", keep_path=False)
         if self.settings.os == "Linux":
             self.copy("premake5", keep_path=False)
+        if self.settings.os == "Macos":
+            self.copy("premake5", keep_path=False)
 
     def package_info(self):
         self.env_info.path.append(self.package_folder)
