@@ -16,6 +16,8 @@ sources:
       url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Windows-x64-v1.06.zip"
     "1.07":
       url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Windows-x64-v1.07.zip"
+    "1.08":
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Windows-x64-v1.08.zip"
   Linux:
     "1.02":
       url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Linux-x64-v1.02.zip"
@@ -29,3 +31,10 @@ sources:
       url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Linux-x64-v1.06.zip"
     "1.07":
       url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Linux-x64-v1.07.zip"
+    "1.08":
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Linux-x64-v1.08.zip"
+  Macos:
+    "1.07":
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-OSX-x64-v1.07.zip"
+    "1.08":
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-OSX-x64-v1.08.zip"
