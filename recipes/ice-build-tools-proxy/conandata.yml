@@ -21,3 +21,6 @@ sources:
   "1.2.2":
     url: "https://github.com/iceshard-engine/ice-build-tools"
     tag: "v1.2.2"
+  "1.2.3":
+    url: "https://github.com/iceshard-engine/ice-build-tools"
+    tag: "v1.2.3"
