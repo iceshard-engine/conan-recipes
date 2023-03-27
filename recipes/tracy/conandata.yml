@@ -8,3 +8,6 @@ sources:
   "0.8.1":
     url: "https://github.com/wolfpld/tracy.git"
     tag: "v0.8.1"
+  "0.9.1":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.9.1"
