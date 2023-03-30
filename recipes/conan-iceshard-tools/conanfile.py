@@ -13,6 +13,9 @@ class IceProperties(object):
         self.build_requires = []
 
 class IceTools(object):
+    def init(self):
+        self.ice_init(self.ice_generator or "none")
+
     def build_requirements(self):
         if self._ice.generator_name == "cmake":
             self.tool_requires("cmake/3.25.3")
