@@ -1,5 +1,5 @@
-from conans import ConanFile, tools
-import os
+from conan import ConanFile
+from conan.tools.files import copy, download, get
 
 class PremakeInstallerConan(ConanFile):
     name = "premake-installer"
@@ -9,19 +9,25 @@ class PremakeInstallerConan(ConanFile):
 
     settings = "os"
 
+    def validate(self):
+        self.platform = str(self.settings.os)
+
     def source(self):
-        source_info = self.conan_data["sources"][str(self.settings.os)][self.version]
+        download(self, self.conan_data["sources"][self.version]["license"], "LICENSE.txt")
+
+        source_info = self.conan_data["sources"][self.version][self.platform]
         if source_info != None:
-            tools.get(**source_info)
+            get(self, **source_info)
 
     def package(self):
-        self.copy("LICENSE.txt", dst="LICENSE")
+        copy(self, "LICENSE.txt", src=self.build_folder, dst=self.package_folder)
+
         if self.settings.os == "Windows":
-            self.copy("premake5.exe", keep_path=False)
+            copy(self, "premake5.exe", src=self.build_folder, dst=self.package_folder, keep_path=False)
         if self.settings.os == "Linux":
-            self.copy("premake5", keep_path=False)
+            copy(self, "premake5", src=self.build_folder, dst=self.package_folder, keep_path=False)
         if self.settings.os == "Macos":
-            self.copy("premake5", keep_path=False)
+            copy(self, "premake5", src=self.build_folder, dst=self.package_folder, keep_path=False)
 
     def package_info(self):
         self.env_info.path.append(self.package_folder)
