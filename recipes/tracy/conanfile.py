@@ -1,6 +1,4 @@
-from conans import ConanFile, MSBuild, tools
-from shutil import copyfile
-import os
+from conan import ConanFile
 
 class TracyConan(ConanFile):
     name = "tracy"
@@ -14,44 +12,35 @@ class TracyConan(ConanFile):
     default_options = { "shared":True, "tracy_fibers":False }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.8.3@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    # Initialize the package
-    def init(self):
-        self.ice_init("cmake")
-        self.build_requires = self._ice.build_requires
+    # ICT Specific fields
+    ice_generator = "cmake"
 
-    # Build both the debug and release builds
+    def ice_generate_cmake(self, toolchain):
+        toolchain.variables['TRACY_FIBERS'] = self.options.tracy_fibers
+
     def ice_build(self):
-        definitions = { }
-        definitions['TRACY_FIBERS'] = self.options.tracy_fibers
-        self.ice_run_cmake(definitions)
+        self.ice_run_cmake()
 
-    def ice_package(self):
-        self.copy("LICENSE", src=self._ice.source_dir, dst="LICENSES/")
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE", src=".", dst="LICENSES/")
+        self.ice_copy("*.h*", src="public/common", dst="include/common", keep_path=True)
+        self.ice_copy("*.h*", src="public/client", dst="include/client", keep_path=True)
+        self.ice_copy("*.h*", src="public/libbacktrace", dst="include/libbacktrace", keep_path=True)
+        self.ice_copy("Tracy*.hpp", src="public/tracy", dst="include/tracy", keep_path=True)
+        self.ice_copy("Tracy*.h", src="public/tracy", dst="include/tracy", keep_path=True)
 
-        self.copy("*.h*", "include/tracy/common", src="{}/common".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.h*", "include/tracy/client", src="{}/client".format(self._ice.source_dir), keep_path=True)
-        self.copy("Tracy*.hpp", "include/tracy", src="{}".format(self._ice.source_dir), keep_path=True)
-        self.copy("Tracy*.h", "include/tracy", src="{}".format(self._ice.source_dir), keep_path=True)
+    def ice_package_artifacts(self):
+        # Copies done for Windows
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
 
-        build_dir = self._ice.build_dir
-
-        if self.settings.os == "Windows":
-            build_dir = os.path.join(build_dir, str(self.settings.build_type))
-
-            self.copy("*.lib", dst="lib", src=build_dir, keep_path=False)
-            if self.options.shared:
-                self.copy("*.dll", dst="bin", src=build_dir, keep_path=False)
-                self.copy("*.pdb", dst="bin", src=build_dir, keep_path=False)
-            else:
-                self.copy("*.pdb", dst="lib", src=build_dir, keep_path=False)
-        if self.settings.os == "Linux":
-            if self.options.shared:
-                self.copy("*.so", dst="bin", src=build_dir, keep_path=False)
-            else:
-                self.copy("*.a", dst="lib", src=build_dir, keep_path=False)
+        # Copies done for Linux and Mac
+        self.ice_copy("*.dylib", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.so", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
