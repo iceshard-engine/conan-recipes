@@ -1,6 +1,4 @@
-from conans import ConanFile, MSBuild, CMake, tools
-import shutil
-import os
+from conan import ConanFile
 
 class SDL2Conan(ConanFile):
     name = "sdl2"
@@ -22,16 +20,11 @@ class SDL2Conan(ConanFile):
         "fPIC": True
     }
 
-    source_dir = "SDL2-{version}"
-
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.8.3@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    # Initialize the package
-    def init(self):
-        self.ice_init("cmake")
-        self.build_requires = self._ice.build_requires
+    ice_generator = "cmake"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -43,52 +36,43 @@ class SDL2Conan(ConanFile):
                 self.output.warn("SDL2 cannot be build as Static library on Windows. Forcing Shared library build.")
             self.options.shared = True
 
-    # Update the package id
     def package_id(self):
         self.info.options.sdl2main = "Any"
 
+    def layout(self):
+        if self.settings.os == "Windows":
+            self.ice_layout("msbuild")
+            self.folders.source = "."
+            self.folders.build = "SDL2-{}".format(self.version)
+        else:
+            self.ice_layout("cmake")
+
+    def generate(self):
+        if self.settings.os == "Windows":
+            self.ice_generate("msbuild")
+        else:
+            self.ice_generate("cmake")
+
     # Build both the debug and release builds
     def ice_build(self):
-        if self.settings.compiler == "Visual Studio":
-            self.ice_run_msbuild("VisualC/SDL.sln")
-
+        if self.settings.compiler == "msvc":
+            self.ice_run_msbuild("VisualC/SDL.sln", retarget=True)
         else:
             self.ice_run_cmake()
 
-    def ice_package(self):
-        # Copy the license file (before 2.0.22)
-        self.copy("COPYING.txt", src=self._ice.source_dir, dst="LICENSES")
-        # Copy the license file (around 2.0.22)
-        self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSES")
+    def ice_package_sources(self):
+        self.ice_copy("COPYING.txt", src=".", dst="LICENSES") # (? before 2.0.22)
+        self.ice_copy("LICENSE.txt", src=".", dst="LICENSES") # (starting from 2.0.22)
+        self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include/sdl2", keep_path=False)
 
-        self.copy("*.h", "include", "{}/include".format(self._ice.source_dir), keep_path=False)
+    def ice_package_artifacts(self):
+        self.ice_copy("*SDL2.dll", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*SDL2.lib", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*SDL2main.lib", src=".", dst="lib", keep_path=False)
 
-        build_dir = self._ice.build_dir
-        if self.settings.compiler == "Visual Studio":
-            build_dir = os.path.join(self._ice.source_dir, "VisualC/x64/{}".format(self.settings.build_type))
-
-        if self.settings.os == "Windows":
-            self.copy("SDL2.dll", dst="bin", src=build_dir, keep_path=False)
-            self.copy("SDL2.pdb", dst="bin", src=build_dir, keep_path=False)
-            self.copy("SDL2.lib", dst="lib", src=build_dir, keep_path=False)
-            self.copy("SDL2main.lib", dst="lib", src=build_dir, keep_path=False)
-
-        if self.settings.os == "Linux":
-            if self.options.shared == True:
-                if self.settings.build_type == "Debug":
-                    self.copy("libSDL2-2.0d.so*", dst="bin", src=build_dir, keep_path=False)
-                    self.copy("libSDL2maind.a", dst="lib", src=build_dir, keep_path=False)
-                else:
-                    self.copy("libSDL2-2.0.so*", dst="bin", src=build_dir, keep_path=False)
-                    self.copy("libSDL2main.a", dst="lib", src=build_dir, keep_path=False)
-            else:
-                if self.settings.build_type == "Debug":
-                    self.copy("libSDL2d.a", dst="lib", src=build_dir, keep_path=False)
-                    self.copy("libSDL2maind.a", dst="lib", src=build_dir, keep_path=False)
-                else:
-                    self.copy("libSDL2.a", dst="lib", src=build_dir, keep_path=False)
-                    self.copy("libSDL2main.a", dst="lib", src=build_dir, keep_path=False)
-
+        self.ice_copy("libSDL2-2.0[d].so*", src=".", dst="bin", keep_path=False)
+        self.ice_copy("libSDL2main[d].a", src=".", dst="lib", keep_path=False)
+        self.ice_copy("libSDL2[d].a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
         if self.settings.os == "Windows":
