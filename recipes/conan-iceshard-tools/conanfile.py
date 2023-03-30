@@ -3,6 +3,7 @@ from conan import ConanFile
 from conan import tools
 from conan.tools.scm import Git
 from conan.tools.files import chdir, copy, get
+from conan.tools.layout import basic_layout
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 from conan.tools.microsoft import MSBuildToolchain, MSBuild, msvs_toolset
 from os.path import join
@@ -40,7 +41,7 @@ class IceTools(object):
         if generator == None:
             generator = self._ice.generator_name
 
-        if self._ice.generator_name == "cmake":
+        if generator == "cmake":
             cmake_layout(self)
         else:
             basic_layout(self)
@@ -51,14 +52,12 @@ class IceTools(object):
     def source(self):
         source_info = self.conan_data["sources"][self.ice_source_key(self.version)]
         if "branch" in source_info:
-            self.output.info("My cool layout!")
             git = Git(self)
             git.clone(source_info["url"], target=".")
             git.checkout(source_info["branch"])
             if "commit" in source_info:
                 git.checkout(source_info["commit"])
         elif "tag" in source_info:
-            self.output.info("My cool layout!")
             git = Git(self)
             git.clone(source_info["url"], target=".")
             git.checkout(source_info["tag"])
@@ -123,8 +122,8 @@ class IceTools(object):
     def package(self):
         # Calls 'ice_package_sources' with a specialized copy method
         if chdir(self, self.source_folder):
-            def CopyFromSource(self, pattern, src, dst, keep_path=False):
-                copy(self, pattern, src=join(self.source_folder, src), dst=join(self.package_folder, dst), keep_path=keep_path)
+            def CopyFromSource(self, pattern, src, dst, excludes=None, keep_path=False):
+                copy(self, pattern, src=join(self.source_folder, src), dst=join(self.package_folder, dst), excludes=excludes, keep_path=keep_path)
             self.ice_copy = types.MethodType(CopyFromSource, self)
             self.ice_package_sources()
             del self.ice_copy
@@ -133,8 +132,8 @@ class IceTools(object):
 
         # Calls 'ice_package_artifacts' with a specialized copy method
         if chdir(self, self.build_folder):
-            def CopyFromBuild(self, pattern, src, dst, keep_path=False):
-                copy(self, pattern, src=join(self.build_folder, src), dst=join(self.package_folder, dst), keep_path=keep_path)
+            def CopyFromBuild(self, pattern, src, dst, excludes=None, keep_path=False):
+                copy(self, pattern, src=join(self.build_folder, src), dst=join(self.package_folder, dst), excludes=excludes, keep_path=keep_path)
             self.ice_copy = types.MethodType(CopyFromBuild, self)
             self.ice_package_artifacts()
             del self.ice_copy
