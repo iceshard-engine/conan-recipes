@@ -1,8 +1,10 @@
 # from enum import Enum
 from conan import ConanFile
+from conan import tools
 from conan.tools.scm import Git
+from conan.tools.files import chdir, copy, get
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
-from conan.tools.files import chdir, copy
+from conan.tools.microsoft import MSBuildToolchain, MSBuild, msvs_toolset
 from os.path import join
 
 import os
@@ -32,8 +34,16 @@ class IceTools(object):
                 raise ConanInvalidConfiguration("Only Dynamic runtimes 'MD' and 'MDd' are supported!")
 
     def layout(self):
+        self.ice_layout()
+
+    def ice_layout(self, generator=None):
+        if generator == None:
+            generator = self._ice.generator_name
+
         if self._ice.generator_name == "cmake":
             cmake_layout(self)
+        else:
+            basic_layout(self)
 
         # Override some specific folders
         self.folders.source = "{}-{}".format(self.name, self.version)
@@ -53,13 +63,19 @@ class IceTools(object):
             git.clone(source_info["url"], target=".")
             git.checkout(source_info["tag"])
         else:
-            tools.get(**source_info)
+            get(self, **source_info)
 
         # Apply patches if any
         self.ice_apply_patches()
 
     def generate(self):
-        if self._ice.generator_name == "cmake":
+        self.ice_generate()
+
+    def ice_generate(self, generator=None):
+        if generator == None:
+            generator = self._ice.generator_name
+
+        if generator == "cmake":
             tc = CMakeToolchain(self)
             self.ice_generate_cmake(tc)
             tc.generate()
@@ -68,7 +84,12 @@ class IceTools(object):
             deps = CMakeDeps(self)
             deps.generate()
 
-        if self._ice.generator_name == "premake5":
+        if generator == "msbuild":
+            tc = MSBuildToolchain(self)
+            self.ice_toolchain_msbuild(tc)
+            tc.generate()
+
+        if generator == "premake5":
             premake_generators_vstudio = {
                 "11": "vs2012",
                 "12": "vs2013",
@@ -149,7 +170,7 @@ class IceTools(object):
     ##
     def ice_generate_cmake(self, toolchain):
         pass
-    def ice_generate_premake5(self, toolchain):
+    def ice_toolchain_msbuild(self, toolchain):
         pass
 
     ##
@@ -164,17 +185,22 @@ class IceTools(object):
     ##
     # Methods used to call build systems
     ##
-    def ice_run_msbuild(self, solution, build_type=None):
-        if build_type == None:
-            build_type = self.settings.build_type
+    def ice_run_msbuild(self, solution, target=None, retarget=False):
+        msbuild_platforms = {
+            "x86": "Win32",
+            "x86_64": "x64",
+        }
 
-        msbuild = MSBuild(self)
-        msbuild.build(solution, build_type=build_type)
+        cmdline = "msbuild {} /p:Configuration={} /p:Platform={}".format(solution, self.settings.build_type, msbuild_platforms.get(str(self.settings.arch), None))
+        if target != None:
+            cmdline += " /target:{}".format(target)
+        if retarget:
+            cmdline += " /p:PlatformToolset={}".format(msvs_toolset(self))
+        self.run(cmdline)
+        # msbuild = MSBuild(self)
+        # msbuild.build(solution, targets=targets)
 
-    def ice_run_cmake(self, target=None, build_type=None):
-        if build_type == None:
-            build_type = self.settings.build_type
-
+    def ice_run_cmake(self, target=None):
         cmake = CMake(self)
         cmake.configure()
         cmake.build(target=target)
