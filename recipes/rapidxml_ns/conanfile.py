@@ -1,5 +1,4 @@
-from conans import ConanFile
-import os
+from conan import ConanFile
 
 class RapidXMLNSConanRecipe(ConanFile):
     name = "rapidxml_ns"
@@ -10,18 +9,17 @@ class RapidXMLNSConanRecipe(ConanFile):
     settings = "os", "compiler", "arch", "build_type"
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.8.3@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
+    ice_generator = "none"
+
     def package_id(self):
-        self.info.header_only()
+        self.info.clear()
 
-    def init(self):
-        self.ice_init("none")
-
-    def package(self):
-        self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSES")
-        self.copy("*.hpp", src=self._ice.source_dir, dst=os.path.join("include", "rapidxml_ns"),excludes=("tests/*", "doc/*"))
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE.txt", src=".", dst="LICENSES")
+        self.ice_copy("*.hpp", src=".", dst="include/rapidxml_ns", excludes=("tests/*", "doc/*"))
 
     def package_info(self):
         self.cpp_info.includedirs = [ "include" ]
