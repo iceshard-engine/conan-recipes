@@ -1,5 +1,4 @@
-from conans import ConanFile, tools
-import os
+from conan import ConanFile
 
 class Catch2Conan(ConanFile):
     name = "catch2"
@@ -10,31 +9,38 @@ class Catch2Conan(ConanFile):
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
 
-    options = { "single_header":[True, False] }
-    default_options = { "single_header":True }
-
-    source_dir = "Catch2-{version}"
+    options = {"with_main":[True, False]}
+    default_options = {"with_main":True}
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
+    ice_generator = "cmake"
+    ice_toolchain = "cmake"
+
     def package_id(self):
-        self.info.header_only()
-        self.info.options.single_header = "Any"
+        del self.info.options.with_main
 
-    # Initialize the package
-    def init(self):
-        self.ice_init("none")
+    def ice_generate_cmake(self, toolchain, deps):
+        toolchain.blocks['cppstd'].values = { 'cppstd': '20', 'cppstd_extensions': 'ON' }
 
-    def package(self):
-        self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSES")
+    def ice_build(self):
+        self.ice_run_cmake()
 
-        self.copy("*", src=os.path.join(self._ice.source_dir, "include"), dst=os.path.join("include", "catch2"))
-        self.copy("*", src=os.path.join(self._ice.source_dir, "single_include"), dst="single_include")
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE.txt", src=".", dst="LICENSES")
+        self.ice_copy("*.hpp", src="src", dst="include", keep_path=True)
+
+    def ice_package_artifacts(self):
+        self.ice_copy("*.hpp", src="generated-includes", dst="include", keep_path=True)
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
-        if self.options.single_header:
-            self.cpp_info.includedirs = [ "single_include" ]
-        else:
-            self.cpp_info.includedirs = [ "include" ]
+        lib_suffix = "d" if self.settings.build_type == "Debug" else ""
+
+        self.cpp_info.libs = [ "Catch2" + lib_suffix ]
+        if self.options.with_main:
+            self.cpp_info.libs.append("Catch2Main" + lib_suffix)
+        # else: Manual (do nothing, we need to provide it manually)

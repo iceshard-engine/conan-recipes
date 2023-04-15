@@ -1,7 +1,11 @@
 sources:
-  "2.13.2":
+  # Outdated!
+  # "2.13.2":
+  #   url: "https://github.com/catchorg/Catch2.git"
+  #   tag: "v2.13.2"
+  # "2.13.9":
+  #   url: "https://github.com/catchorg/Catch2.git"
+  #   tag: "v2.13.9"
+  "3.3.2":
     url: "https://github.com/catchorg/Catch2.git"
-    tag: "v2.13.2"
-  "2.13.9":
-    url: "https://github.com/catchorg/Catch2.git"
-    tag: "v2.13.9"
+    tag: "v3.3.2"
