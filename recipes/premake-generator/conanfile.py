@@ -1,172 +1,145 @@
-from conans.model import Generator
-from conans import ConanFile
-from posixpath import normpath
 
-conan_lua_function = """
-local conan_modules = { }
-function conan(modules)
-    for _, v in ipairs(modules) do
-        v = v:lower()
-        assert(conan_modules[v], ("The given module '%s' couldn't be found, have you added it to your conanfile.txt?"):format(v))
-        conan_modules[v]()
-    end
-end
-"""
+from conan import ConanFile
+from conan.internal import check_duplicated_generator
+from conans.model.build_info import CppInfo
+from conans.util.files import save
 
-conan_lua_module = """
-conan_modules[('{name}'):lower()] = function()
-    {funcs}
-end
-"""
+PREMAKE_FILE = "conandeps.lua"
 
+class _PremakeTemplate(object):
+    def __init__(self, deps_cpp_info):
+        self.includedirs = ",\n".join('"%s"' % p.replace("\\", "/")
+                                      for p in
+                                      deps_cpp_info.includedirs) if deps_cpp_info.includedirs else ""
+        self.libdirs = ",\n".join('"%s"' % p.replace("\\", "/")
+                                  for p in deps_cpp_info.libdirs) if deps_cpp_info.libdirs else ""
+        self.bindirs = ",\n".join('"%s"' % p.replace("\\", "/")
+                                  for p in deps_cpp_info.bindirs) if deps_cpp_info.bindirs else ""
+        self.libs = ", ".join(
+            '"%s"' % p.replace('"', '\\"') for p in deps_cpp_info.libs) if deps_cpp_info.libs else ""
+        self.system_libs = ", ".join('"%s"' % p.replace('"', '\\"') for p in
+                                     deps_cpp_info.system_libs) if deps_cpp_info.system_libs else ""
+        self.defines = ", ".join('"%s"' % p.replace('"', '\\"') for p in
+                                 deps_cpp_info.defines) if deps_cpp_info.defines else ""
+        self.cxxflags = ", ".join(
+            '"%s"' % p for p in deps_cpp_info.cxxflags) if deps_cpp_info.cxxflags else ""
+        self.cflags = ", ".join(
+            '"%s"' % p for p in deps_cpp_info.cflags) if deps_cpp_info.cflags else ""
+        self.sharedlinkflags = ", ".join('"%s"' % p.replace('"', '\\"') for p in
+                                         deps_cpp_info.sharedlinkflags) \
+            if deps_cpp_info.sharedlinkflags else ""
+        self.exelinkflags = ", ".join('"%s"' % p.replace('"', '\\"') for p in
+                                      deps_cpp_info.exelinkflags) \
+            if deps_cpp_info.exelinkflags else ""
+        self.frameworks = ", ".join('"%s.framework"' % p.replace('"', '\\"') for p in
+                                    deps_cpp_info.frameworks) if deps_cpp_info.frameworks else ""
+        self.sysroot = "%s" % deps_cpp_info.sysroot.replace("\\",
+                                                            "/") if deps_cpp_info.sysroot else ""
 
 class PremakeDeps(object):
-    def __init__(self, source, base=None):
-        def get_unique(name):
-            attrib = getattr(source, name, [])
-            attrib_base = getattr(base, name, [])
+    def __init__(self, conanfile):
+        self._conanfile = conanfile
 
-            if base == None:
-                return attrib
+    def generate(self):
+        check_duplicated_generator(self, self._conanfile)
+        # Current directory is the generators_folder
+        generator_files = self.content
+        for generator_file, content in generator_files.items():
+            save(generator_file, content)
 
-            if type(attrib) != list:
-                return attrib
-
-            return [item for item in attrib if item not in attrib_base]
-
-        self.includedirs = get_unique('include_paths')
-        self.libdirs = get_unique('lib_paths')
-        self.bindirs = get_unique('bin_paths')
-        self.links = get_unique('libs')
-        self.defines = get_unique('defines')
-
-        if base == None:
-            if hasattr(source, 'debug'):
-                self.debug = PremakeDeps(source.debug, base=source)
-            if hasattr(source, 'release'):
-                self.release = PremakeDeps(source.release, base=source)
-
-    def has_cpp_info(self):
-        return (self.includedirs
-            or self.libdirs
-            or self.defines
-            or self.links
-            or self.bindirs
-        )
-
-
-class PremakeModule(object):
-    def __init__(self, name):
-        self.name = name
-        self.lines = []
-
-    def append(self, str, indent = False):
-        if indent:
-            self.lines.append("    %s" % str)
-        else:
-            self.lines.append("%s" % str)
-
-    def build_property(self, name, values, paths=False, IndentLevel=0):
-        indent_prop = ''.join(["    "] * IndentLevel)
-        indent_prop_arg = ''.join(["    "] * (IndentLevel + 1))
-        lines = []
-
-        if values:
-            lines.append("%s%s{" % (indent_prop, name))
-            for value in values:
-                if paths:
-                    value = normpath(value).replace("\\", "/")
-                lines.append('%s"%s",' % (indent_prop_arg, value))
-            lines.append("%s}" % indent_prop)
-
-        return lines
-
-    def build_commands_property(self, dirs_from, to, command, files="*", stage="", IndentLevel=0):
-        indent_prop = ''.join(["    "] * IndentLevel)
-        indent_prop_arg = ''.join(["    "] * (IndentLevel + 1))
-        lines = []
-
-        if command not in ["copy"]:
-            return lines
-
-        # make sure we end the ratget dir with a slash
-        to = normpath(to) + "/"
-
-        if dirs_from:
-            lines.append("%s%scommands{" % (indent_prop, stage))
-            for dir_from in dirs_from:
-                dir_from = normpath(dir_from).replace("\\", "/")
-                # For the 'copy' command
-                if command == "copy":
-                    lines.append('%s\'{COPY} "%s/%s" "%s"\',' % (indent_prop_arg, dir_from, files, to))
-            lines.append("%s}" % indent_prop)
-
-        return lines
-
-    def build_property_group(self, deps, filter=None):
-
-        indentation = 0
-        if filter != None:
-            indentation = 1
-
-        lines = []
-        lines += self.build_property("includedirs", deps.includedirs, True, IndentLevel=indentation)
-        lines += self.build_property("libdirs", deps.libdirs, True, IndentLevel=indentation)
-        lines += self.build_property("links", deps.links, False, IndentLevel=indentation)
-        lines += self.build_property("defines", deps.defines, False, IndentLevel=indentation)
-
-        if lines and filter != None:
-            lines.insert(0, 'filter { "tags:%s" }' % '", "'.join(filter))
-            lines.append('filter { "*" }')
-
-        return lines
-
-    def build_conan_module(self, deps):
-
-        lines = []
-        lines += self.build_property_group(deps)
-        if deps.debug:
-            lines += self.build_property_group(deps.debug, [ "conan-debug" ])
-        if deps.release:
-            lines += self.build_property_group(deps.release, [ "not conan-debug" ])
-
-        if lines:
-            funcs = "\n    ".join(lines)
-            self.append(conan_lua_module.format(name=self.name, funcs=funcs))
-            return True
-
-        return False
-
-    def build(self, deps):
-        if self.build_conan_module(deps):
-            return '\n'.join(self.lines)
-        return ''
-
-
-class premake(Generator):
-    @property
-    def filename(self):
-        return "conan.lua"
+    def _get_cpp_info(self):
+        ret = CppInfo()
+        for dep in self._conanfile.dependencies.host.values():
+            dep_cppinfo = dep.cpp_info.copy()
+            dep_cppinfo.set_relative_base_folder(dep.package_folder)
+            # In case we have components, aggregate them, we do not support isolated "targets"
+            # dep_cppinfo.aggregate_components()
+            ret.merge(dep_cppinfo)
+        return ret
 
     @property
     def content(self):
-        sections = ["# Generated Conan file"]
-        sections.append(conan_lua_function)
+        ret = {}  # filename -> file content
 
-        for dep_name, dep_cpp_info in self.deps_build_info.dependencies:
-            deps = PremakeDeps(dep_cpp_info)
-            if deps.has_cpp_info():
-                module = PremakeModule(dep_name)
-                sections.append(module.build(deps))
+        host_req = self._conanfile.dependencies.host
+        test_req = self._conanfile.dependencies.test
 
-        return "\n".join(sections)
+        # template = ('conan_includedirs{dep} = {{{deps.includedirs}}}\n'
+        #             'conan_libdirs{dep} = {{{deps.libdirs}}}\n'
+        #             'conan_bindirs{dep} = {{{deps.bindirs}}}\n'
+        #             'conan_libs{dep} = {{{deps.libs}}}\n'
+        #             'conan_system_libs{dep} = {{{deps.system_libs}}}\n'
+        #             'conan_defines{dep} = {{{deps.defines}}}\n'
+        #             'conan_cxxflags{dep} = {{{deps.cxxflags}}}\n'
+        #             'conan_cflags{dep} = {{{deps.cflags}}}\n'
+        #             'conan_sharedlinkflags{dep} = {{{deps.sharedlinkflags}}}\n'
+        #             'conan_exelinkflags{dep} = {{{deps.exelinkflags}}}\n'
+        #             'conan_frameworks{dep} = {{{deps.frameworks}}}\n')
+
+        template = (
+            'conan_modules[("{dep}"):lower()] = function()\n'
+            # '    configurations{conan_build_type}\n'
+            # '    architecture(conan_arch)\n'
+            '    includedirs{{{deps.includedirs}}}\n'
+            '    libdirs{{{deps.libdirs}}}\n'
+            '    links{{{deps.libs}}}\n'
+            '    links{{{deps.system_libs}}}\n'
+            '    links{{{deps.frameworks}}}\n'
+            '    defines{{{deps.defines}}}\n'
+            '    bindirs{{{deps.bindirs}}}\n'
+            'end\n')
+
+        sections = ["#!lua"]
+        sections.append("conan_modules = { }")
+        sections.append(
+            'function conan(modules)\n'
+            '    for _, v in ipairs(modules) do\n'
+            '        v = v:lower()\n'
+            '        assert(conan_modules[v], ("The given module \'%s\' couldn\'t be found, have you added it to your conanfile.txt?"):format(v))\n'
+            '        conan_modules[v]()\n'
+            '    end\n'
+            'end\n')
+
+        # deps = _PremakeTemplate(self._get_cpp_info())
+        # all_flags = template.format(dep="", deps=deps)
+        # sections.append(all_flags)
+        # sections.append(
+        #     "function conan_basic_setup()\n"
+        #     "    configurations{conan_build_type}\n"
+        #     "    architecture(conan_arch)\n"
+        #     "    includedirs{conan_includedirs}\n"
+        #     "    libdirs{conan_libdirs}\n"
+        #     "    links{conan_libs}\n"
+        #     "    links{conan_system_libs}\n"
+        #     "    links{conan_frameworks}\n"
+        #     "    defines{conan_defines}\n"
+        #     "    bindirs{conan_bindirs}\n"
+        #     "end\n")
+
+        # template_deps = template + 'conan_sysroot{dep} = "{deps.sysroot}"\n'
+
+        # Iterate all the transitive requires
+        for require, dep in list(host_req.items()) + list(test_req.items()):
+            # FIXME: Components are not being aggregated
+            # FIXME: It is not clear the usage of individual dependencies
+            deps = _PremakeTemplate(dep.cpp_info)
+            dep_name = dep.ref.name.replace("-", "_")
+            dep_flags = template.format(dep=dep_name, deps=deps)
+            sections.append(dep_flags)
+            # ret[dep.ref.name + '.lua'] = "\n".join(["#!lua", dep_flags])
+
+        ret[PREMAKE_FILE] = "\n".join(sections)
+        return ret
 
 
-class Premake5GeneratorPackage(ConanFile):
+class PremakeGeneratorPackage(ConanFile):
     name = "premake-generator"
-    version = "0.1.1"
-    license = "MIT"
+    version = "0.2.0"
+    user = "iceshard"
+    channel = "stable"
+
     description = "Conan package manager generator for premake."
+    license = "MIT"
 
     def package(self):
         pass
