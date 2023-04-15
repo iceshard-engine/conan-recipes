@@ -1,4 +1,5 @@
-from conans import ConanFile, tools
+from conan import ConanFile
+from conan.tools.files import get, copy
 import os
 
 class FASTBuildInstallerConan(ConanFile):
@@ -9,26 +10,22 @@ class FASTBuildInstallerConan(ConanFile):
 
     settings = "os"
 
-    def source(self):
-        source_info = self.conan_data["sources"][str(self.settings.os)][self.version]
-        if source_info != None:
-            tools.get(**source_info)
+    def generate(self):
+        get(self, **self.conan_data["sources"][str(self.settings.os)][self.version])
 
     def package(self):
-        self.copy("LICENSE.TXT", dst="LICENSE")
-        if self.settings.os == "Windows":
-            self.copy("FBuild.exe", keep_path=False)
-            self.copy("FBuildWorker.exe", keep_path=False)
-        if self.settings.os == "Linux":
-            self.copy("fbuild", keep_path=False)
-            self.copy("fbuildworker", keep_path=False)
+        copy(self, "LICENSE.TXT", src=".", dst=os.path.join(self.package_folder, "LICENSES"))
+        copy(self, "FBuild.exe", src=".", dst=self.package_folder, keep_path=False)
+        copy(self, "FBuildWorker.exe", src=".", dst=self.package_folder, keep_path=False)
+        copy(self, "fbuild", src=".", dst=self.package_folder, keep_path=False)
+        copy(self, "fbuildworker", src=".", dst=self.package_folder, keep_path=False)
 
     def package_info(self):
-        self.env_info.PATH.append(self.package_folder)
+        self.runenv_info.append_path("PATH", self.package_folder)
 
         if self.settings.os == "Windows":
-            self.env_info.FBUILD_EXE = os.path.join(self.package_folder, "FBuild.exe")
-            self.env_info.FBUILDWORKER_EXE = os.path.join(self.package_folder, "FBuildWorker.exe")
+            self.runenv_info.define("FBUILD_EXE", os.path.join(self.package_folder, "FBuild.exe"))
+            self.runenv_info.define("FBUILDWORKER_EXE", os.path.join(self.package_folder, "FBuildWorker.exe"))
         if self.settings.os == "Linux":
-            self.env_info.FBUILD_EXE = os.path.join(self.package_folder, "fbuild")
-            self.env_info.FBUILDWORKER_EXE = os.path.join(self.package_folder, "fbuildworker")
+            self.runenv_info.define("FBUILD_EXE", os.path.join(self.package_folder, "fbuild"))
+            self.runenv_info.define("FBUILDWORKER_EXE", os.path.join(self.package_folder, "fbuildworker"))
