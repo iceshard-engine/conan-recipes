@@ -1,9 +1,9 @@
 sources:
   "5.0.0":
-    license: "https://github.com/premake/premake-core/blob/v5.0.0-alpha15/LICENSE.txt"
+    license: "https://github.com/premake/premake-core/blob/v5.0.0-beta1/LICENSE.txt"
     Windows:
-      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-windows.zip"
+      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-windows.zip"
     Linux:
-      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-linux.tar.gz"
+      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-linux.tar.gz"
     Macos:
-      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-alpha15/premake-5.0.0-alpha15-macosx.tar.gz"
+      url: "https://github.com/premake/premake-core/releases/download/v5.0.0-beta1/premake-5.0.0-beta1-macosx.tar.gz"

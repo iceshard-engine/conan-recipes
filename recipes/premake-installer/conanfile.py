@@ -30,4 +30,4 @@ class PremakeInstallerConan(ConanFile):
             copy(self, "premake5", src=self.build_folder, dst=self.package_folder, keep_path=False)
 
     def package_info(self):
-        self.env_info.path.append(self.package_folder)
+        self.runenv_info.append_path("PATH", self.package_folder)
