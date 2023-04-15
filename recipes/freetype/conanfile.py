@@ -1,4 +1,4 @@
-from conans import ConanFile, tools
+from conan import ConanFile
 import os
 
 class FreeTypeConanRecipe(ConanFile):
@@ -16,51 +16,39 @@ class FreeTypeConanRecipe(ConanFile):
       "fPIC": True
     }
 
-    source_dir = "{name}-{version}"
-
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    # Initialize the package
-    def init(self):
-        self.ice_init("cmake")
-        self.build_requires = self._ice.build_requires
+    ice_generator = "cmake"
+    ice_toolchain = "cmake"
 
     def configure(self):
-        if self.settings.compiler == 'Visual Studio':
+        if self.settings.compiler == 'msvc':
             del self.options.fPIC
 
-    def package_id(self):
-        pass
+    def ice_generate_cmake(self, toolchain, deps):
+        toolchain.variables['SKIP_INSTALL_ALL'] = True
 
     def ice_build(self):
-      definitions = {}
-      definitions['SKIP_INSTALL_ALL'] = True
-      self.ice_run_cmake(definitions)
+        self.ice_run_cmake()
 
-    def ice_package(self):
-        self.copy("docs/FTL.TXT", src=self._ice.source_dir, dst="LICENSES/", keep_path=False)
-        self.copy("docs/GPLv2.TXT", src=self._ice.source_dir, dst="LICENSES/", keep_path=False)
+    def ice_package_sources(self):
+        self.ice_copy("docs/FTL.TXT", src=".", dst="LICENSES/", keep_path=False)
+        self.ice_copy("docs/GPLv2.TXT", src=".", dst="LICENSES/", keep_path=False)
+        self.ice_copy("*.h", src="include", dst="include/", keep_path=True)
 
-        self.copy("*.h", "include/", src="{}/include".format(self._ice.source_dir), keep_path=True)
-
-        build_dir = self._ice.build_dir
-
-        if self.settings.os == "Windows":
-            build_dir = os.path.join(build_dir, str(self.settings.build_type))
-
-            self.copy("*.lib", dst="lib", src=build_dir, keep_path=False)
-            self.copy("*.pdb", dst="lib", src=build_dir, keep_path=False)
-
-        if self.settings.os == "Linux":
-            self.copy("*.a", dst="lib", src=build_dir, keep_path=False)
-
+    def ice_package_artifacts(self):
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
+        self.cpp_info.set_property("cmake_file_name", "Freetype")
+        self.cpp_info.set_property("cmake_target_name", "Freetype::Freetype")
+
         self.cpp_info.libdirs = ['lib']
 
         if self.settings.build_type == "Debug":
-          self.cpp_info.libs = ['freetyped']
+            self.cpp_info.libs = ['freetyped']
         else:
-          self.cpp_info.libs = ['freetype']
+            self.cpp_info.libs = ['freetype']
