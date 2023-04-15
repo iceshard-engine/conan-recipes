@@ -12,13 +12,14 @@ class TracyConan(ConanFile):
     default_options = { "shared":True, "tracy_fibers":False }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.3@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     # ICT Specific fields
     ice_generator = "cmake"
+    ice_toolchain = "cmake"
 
-    def ice_generate_cmake(self, toolchain):
+    def ice_generate_cmake(self, toolchain, deps):
         toolchain.variables['TRACY_FIBERS'] = self.options.tracy_fibers
 
     def ice_build(self):
