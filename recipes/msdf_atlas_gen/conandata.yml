@@ -3,7 +3,3 @@ sources:
     url: "https://github.com/Chlumsky/msdf-atlas-gen.git"
     branch: master
     commit: "50d1a1c275e78ee08afafbead2a2d347aa26f122"
-patches:
-  "1.2.2":
-    - patch_file: "patches/conan_basic_setup.patch"
-      description: "Updates CMake file to make a basic conan setup."

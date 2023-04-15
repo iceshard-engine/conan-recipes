@@ -1,5 +1,4 @@
-from conans import ConanFile, Meson, tools
-import os
+from conan import ConanFile
 
 class MsdfAtlasGenConanRecipe(ConanFile):
     name = "msdf_atlas_gen"
@@ -17,56 +16,44 @@ class MsdfAtlasGenConanRecipe(ConanFile):
         "fPIC": True
     }
 
-    # source_dir = "{name}-{version}"
+    requires = "msdfgen/1.9.2@iceshard/stable"
 
     # Additional files to export
     exports_sources = ["patches/*"]
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    requires = "msdfgen/1.9.2@iceshard/stable"
-
-    # Initialize the package
-    def init(self):
-        self.ice_init("cmake")
-        self.build_requires = self._ice.build_requires
-        # self.build_requires = "meson/0.62.1" # self._ice.build_requires
+    ice_generator = "cmake"
+    ice_toolchain = "cmake"
 
     def configure(self):
-        if self.settings.compiler == 'Visual Studio':
+        if self.settings.compiler == 'msvc':
             del self.options.fPIC
 
-    def ice_build(self):
+    def source(self):
+        self.ice_source()
         self.run("cd artery-font-format && git submodule update --init")
 
-        self.ice_generate()
-        self.ice_apply_patches()
+    def ice_build(self):
+        variables = { }
+        variables['MSDF_ATLAS_GEN_BUILD_STANDALONE'] = False
+        variables['MSDF_ATLAS_GEN_MSDFGEN_EXTERNAL'] = True
+        self.ice_run_cmake(variables=variables)
 
-        definitions = { }
-        definitions['MSDF_ATLAS_GEN_BUILD_STANDALONE'] = False
-        definitions['MSDF_ATLAS_GEN_MSDFGEN_EXTERNAL'] = True
-        self.ice_run_cmake(definitions)
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE.txt", src=".", dst="LICENSE")
+        self.ice_copy("*.h*", src="msdf-atlas-gen", dst="include/msdf-atlas-gen", keep_path=True)
 
-    def ice_package(self):
-        self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSE")
-
-        self.copy("*.h*", "include/msdf-atlas-gen", src="{}/msdf-atlas-gen".format(self._ice.source_dir), keep_path=True)
-
-        build_dir = self._ice.build_dir
-        if self.settings.os == "Windows":
-            build_dir = os.path.join(build_dir, "../build")
-
-            self.copy("*.lib", dst="lib", src="{}/lib".format(build_dir), keep_path=False)
-            self.copy("*.pdb", dst="lib", src="{}/lib".format(build_dir), keep_path=False)
-        if self.settings.os == "Linux":
-            self.copy("*.a", dst="lib", src="{}/lib".format(build_dir), keep_path=False)
+    def ice_package_artifacts(self):
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libdirs = ['lib']
         self.cpp_info.includedirs = [
             'include',
-            os.path.join(self.dependencies['msdfgen'].package_folder, "include/msdfgen")
+            # os.path.join(self.dependencies['msdfgen'].package_folder, "include/msdfgen")
         ]
         self.cpp_info.libs = ['msdf-atlas-gen']
