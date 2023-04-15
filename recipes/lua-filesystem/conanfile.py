@@ -1,4 +1,7 @@
-from conans import ConanFile
+from conan import ConanFile
+from conan.tools.microsoft import NMakeDeps, NMakeToolchain
+from conan.tools.files import chdir, replace_in_file
+
 import os
 
 class LuaFilesystemConan(ConanFile):
@@ -12,37 +15,49 @@ class LuaFilesystemConan(ConanFile):
     options = { "shared": [True, False] }
     default_options = { "shared":True }
 
-    exports_sources = ["premake5.lua"]
     requires = "lua/5.1.5@iceshard/stable"
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
+    ice_generator = "none"
+    ice_toolchain = "none"
 
-    def init(self):
-        self.ice_init("premake5")
-        self.build_requires = self._ice.build_requires
+    def layout(self):
+        self.ice_layout("none")
+        self.folders.build = self.folders.source
+
+    def generate(self):
+        deps = NMakeDeps(self)
+        deps_vars = deps.vars()
+
+        tc = NMakeToolchain(self)
+        env = tc.environment()
+        env.append('CFLAGS', deps_vars.get('CL'))
+        env.define('LUA_LIB', deps_vars.get('_LINK_'))
+        env.define('LIB', deps_vars.get('LIB'))
+        tc.generate(env)
+
+        chdir(self, self.source_folder)
+        replace_in_file(self, os.path.join(self.source_folder, "Makefile.win"), "include config.win", "#test")
 
     def ice_build(self):
-        self.ice_generate()
-
-        if self.settings.compiler == "Visual Studio":
-            self.ice_run_msbuild("LuaFilesystem.sln")
-        else:
-            self.ice_run_make()
-
-    def ice_package(self):
-        self.copy("LICENSE", src=self._ice.source_dir, dst="LICENSE")
-        self.copy("*.h", "include", "{}/src".format(self._ice.source_dir), keep_path=False)
-
-        build_dir = os.path.join(self._ice.build_dir, "bin")
         if self.settings.os == "Windows":
-            self.copy("*.lib", "lib", build_dir, keep_path=False)
-            self.copy("*.dll", "bin", build_dir, keep_path=False)
-        if self.settings.os == "Linux":
-            self.copy("*.a", "lib", build_dir, keep_path=False)
-            self.copy("*.so", "lib", build_dir, keep_path=False)
+            chdir(self, self.build_folder)
+            self.run("nmake /f Makefile.win")
+        else:
+            self.run("make")
+
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE", src=".", dst="LICENSES")
+        self.ice_copy("*.h", src="src", dst="include", keep_path=False)
+
+    def ice_package_artifacts(self):
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.so", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libdirs = [ "lib" ]
@@ -51,6 +66,6 @@ class LuaFilesystemConan(ConanFile):
 
         # Enviroment info
         if self.settings.os == "Windows":
-            self.env_info.LUA_CPATH.append(os.path.join(self.package_folder, "bin/?.dll"))
+            self.runenv_info.append_path("LUA_CPATH", os.path.join(self.package_folder, "bin/?.dll"))
         if self.settings.os == "Linux":
-            self.env_info.LUA_CPATH.append(os.path.join(self.package_folder, "lib/lib?.so"))
+            self.runenv_info.append_path("LUA_CPATH", os.path.join(self.package_folder, "lib/lib?.so"))
