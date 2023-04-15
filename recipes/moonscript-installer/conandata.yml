@@ -2,6 +2,7 @@ sources:
   "0.5.0":
     "moonscript":
       url: "https://github.com/leafo/moonscript.git"
+      branch: "master"
       commit: "0ac82e3af5bbb299f8e2b4d542cb3a0daafaba6c" # 0.5.0
     # Due to lack of time (in the past and present) this package is a monstrous creation.
     # It still does its job well, but we should separate these into separate packages.

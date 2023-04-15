@@ -1,6 +1,7 @@
-from conans import ConanFile, MSBuild, tools
-from shutil import copyfile
-import os
+from conan import ConanFile
+from conan.tools.scm import Git
+from conan.tools.files import get, copy, rename
+from os.path import join
 
 class MoonscriptInstallerConan(ConanFile):
     name = "moonscript-installer"
@@ -35,61 +36,66 @@ class MoonscriptInstallerConan(ConanFile):
         "jsonlua": "jsonlua-source",
     }
 
-    def build_id(self):
-        del self.info_build.settings.os
-
     def package_id(self):
         del self.info.settings.os
 
+    def layout(self):
+        self.folders.source = "."
+        self.folders.build = "."
+
     def source(self):
-        source_info = self.conan_data["sources"][self.version]
-        if source_info != None:
+        # source_folder = "{}-{}".format(self.name, self.version)
+        dependencies = self.conan_data["sources"][self.version]
 
-            for dep, info in source_info.items():
-                git = tools.Git(folder=self.folder_names[dep])
-                git.clone(info['url'])
-                if "commit" in info:
-                    git.checkout(info['commit'])
-                elif "tag" in info:
-                    git.checkout(info['tag'])
+        for dep, source_info in dependencies.items():
+            if "branch" in source_info:
+                git = Git(self, folder=self.folder_names[dep])
+                git.clone(source_info["url"], target=".")
+                git.checkout(source_info["branch"])
+                if "commit" in source_info:
+                    git.checkout(source_info["commit"])
+            elif "tag" in source_info:
+                git = Git(self, folder=self.folder_names[dep])
+                git.clone(source_info["url"], target=".")
+                git.checkout(source_info["tag"])
 
+    def build(self):
+        rename(self, "bin/moon_unix", "bin/moon")
+        rename(self, "bin/moonc_unix", "bin/moonc")
 
     # Export the files available in the package
     def package(self):
         # Additonal batch files to copy
-        self.copy("*.*", src="bin", dst="scripts/moonscript/bin", keep_path=False)
+        copy(self, "*", src=join(self.build_folder, "bin"), dst=join(self.package_folder, "scripts/moonscript/bin"), keep_path=False)
 
         for name, folder_name in self.folder_names.items():
+            src = join(self.build_folder, folder_name)
             if name == "moonscript":
-                self.copy("bin/*", src=folder_name, dst="scripts/moonscript", keep_path=True)
-                self.copy("moon/*", src=folder_name, dst="scripts/moonscript", keep_path=True)
-                self.copy("moonscript/*", src=folder_name, dst="scripts/moonscript", keep_path=True)
+                dst = join(self.package_folder, "scripts/moonscript")
+                copy(self, "bin/*", src=src, dst=dst, keep_path=True)
+                copy(self, "moon/*", src=src, dst=dst, keep_path=True)
+                copy(self, "moonscript/*", src=src, dst=dst, keep_path=True)
             else:
-                self.copy("LICENSE", src=folder_name, dst="LICENSE-{}".format(name))
-                self.copy("*.lua", src=folder_name, dst="scripts/{}".format(name), keep_path=False)
-
-        copyfile("bin/moon_unix", "bin/moon")
-        copyfile("bin/moonc_unix", "bin/moonc")
-        self.copy("moon", src="bin", dst="scripts/moonscript/bin", keep_path=False)
-        self.copy("moonc", src="bin", dst="scripts/moonscript/bin", keep_path=False)
-        self.copy("moon_windows", src="bin", dst="scripts/moonscript/bin", keep_path=False)
-
+                copy(self, "LICENSE", src=src, dst=join(self.package_folder, "LICENSE-{}".format(name)))
+                copy(self, "*.lua", src=src, dst=join(self.package_folder, "scripts/{}".format(name)), keep_path=False, excludes=["bench*", "*_spec.lua"])
 
     def package_info(self):
         # Enviroment info
-        self.env_info.PATH.append(os.path.join(self.package_folder, "scripts/moonscript/bin"))
+        self.runenv_info.append_path("PATH", join(self.package_folder, "scripts/moonscript/bin"))
 
         if self.settings.os == "Linux":
-            self.env_info.MOON_SCRIPT = os.path.join(self.package_folder, "scripts/moonscript/bin/moon")
-            self.env_info.MOONC_SCRIPT = os.path.join(self.package_folder, "scripts/moonscript/bin/moonc")
+            self.runenv_info.define("MOON_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moon"))
+            self.runenv_info.define("MOONC_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moonc"))
+            self.buildenv_info.define("MOONC_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moonc"))
 
         elif self.settings.os == "Windows":
-            self.env_info.MOON_SCRIPT = os.path.join(self.package_folder, "scripts/moonscript/bin/moon.bat")
-            self.env_info.MOONC_SCRIPT = os.path.join(self.package_folder, "scripts/moonscript/bin/moonc.bat")
+            self.runenv_info.define("MOON_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moon.bat"))
+            self.runenv_info.define("MOONC_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moonc.bat"))
+            self.buildenv_info.define("MOONC_SCRIPT", join(self.package_folder, "scripts/moonscript/bin/moonc.bat"))
 
         # Lua paths info
         for name in self.folder_names:
-            self.env_info.LUA_PATH.append(os.path.join(self.package_folder, "scripts/{}/?.lua".format(name)))
+            self.runenv_info.append_path("LUA_PATH", join(self.package_folder, "scripts/{}/?.lua".format(name)))
 
         # Extra entry
-        self.env_info.LUA_PATH.append(os.path.join(self.package_folder, "scripts/moonscript/?/init.lua"))
+        self.runenv_info.append_path("LUA_PATH", join(self.package_folder, "scripts/moonscript/?/init.lua"))
