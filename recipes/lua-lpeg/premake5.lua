@@ -1,4 +1,4 @@
-require "conan"
+require "conandeps"
 
 newoption {
     trigger = "shared",
