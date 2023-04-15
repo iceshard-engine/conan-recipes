@@ -1,5 +1,4 @@
-from conans import ConanFile, tools
-import os
+from conan import ConanFile
 
 class AssimpConan(ConanFile):
     name = "assimp"
@@ -28,14 +27,13 @@ class AssimpConan(ConanFile):
     }
 
     exports_sources = ["patches/*"]
-    requires = "zlib/1.2.11@iceshard/stable"
+    requires = "zlib/1.2.13@iceshard/stable"
 
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    def init(self):
-        self.ice_init("cmake")
-        self.build_requires = self._ice.build_requires
+    ice_generator = "cmake"
+    ice_toolchain = "cmake"
 
     def requirements(self):
         if not self.options.internal_irrxml:
@@ -49,30 +47,27 @@ class AssimpConan(ConanFile):
 
     # Build both the debug and release builds
     def ice_build(self):
-        self.ice_generate()
-        self.ice_apply_patches()
-
-        definitions = { }
-        definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        definitions["ASSIMP_DOUBLE_PRECISION"] = self.options.double_precision
-        definitions["ASSIMP_NO_EXPORT"] = self.options.no_export
-        definitions["ASSIMP_BUILD_ASSIMP_TOOLS"] = False
-        definitions["ASSIMP_BUILD_TESTS"] = False
-        definitions["ASSIMP_BUILD_SAMPLES"] = False
-        definitions["ASSIMP_BUILD_ZLIB"] = False
-        definitions["ASSIMP_INSTALL_PDB"] = False
+        variables = { }
+        variables["BUILD_SHARED_LIBS"] = self.options.shared
+        variables["ASSIMP_DOUBLE_PRECISION"] = self.options.double_precision
+        variables["ASSIMP_NO_EXPORT"] = self.options.no_export
+        variables["ASSIMP_BUILD_ASSIMP_TOOLS"] = False
+        variables["ASSIMP_BUILD_TESTS"] = False
+        variables["ASSIMP_BUILD_SAMPLES"] = False
+        variables["ASSIMP_BUILD_ZLIB"] = False
+        variables["ASSIMP_INSTALL_PDB"] = False
 
         # [?] There is not a single reason to have this to true in a pre-build package with explicit profiles set.
-        # definitions["CONAN_DISABLE_CHECK_COMPILER"] = True
+        # variables["CONAN_DISABLE_CHECK_COMPILER"] = True
 
         # Disabling ASSIMP_ANDROID_JNIIOSYSTEM, failing in cmake install
-        definitions["ASSIMP_ANDROID_JNIIOSYSTEM"] = False
+        variables["ASSIMP_ANDROID_JNIIOSYSTEM"] = False
 
         if self.settings.os != "Windows":
-            definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
+            variables['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
 
-        definitions["ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT"] = True
-        self.ice_run_cmake(definitions=definitions)
+        variables["ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT"] = True
+        self.ice_run_cmake(variables=variables)
 
         # Strip symbols on unix if requested
         if self.settings.os == "Linux":
@@ -82,44 +77,37 @@ class AssimpConan(ConanFile):
                 else:
                     self.run("strip ../build/bin/libassimp.so")
 
-    def ice_package(self):
-        self.copy("LICENSE.md", dst="LICENSES", keep_path=False)
-        self.copy("LICENSE", dst="LICENSES", src=self._ice.source_dir, keep_path=False)
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE.md", src=".", dst="LICENSES", keep_path=False)
+        self.ice_copy("LICENSE", src=".", dst="LICENSES", keep_path=False)
 
-        self.copy("*.h", dst="include", src="{}/include".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.hpp", dst="include", src="{}/include".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.inl", dst="include", src="{}/include".format(self._ice.source_dir), keep_path=True)
-        self.copy("*.h", dst="include_{}".format(self.settings.build_type), src="{}/include".format(self._ice.build_dir), keep_path=True)
+        self.ice_copy("*.h", src="include", dst="include", keep_path=True)
+        self.ice_copy("*.hpp", src="include", dst="include", keep_path=True)
+        self.ice_copy("*.inl", src="include", dst="include", keep_path=True)
+        self.ice_copy("*.h", src="include", dst="include_{}".format(self.settings.build_type), keep_path=True)
 
-        if self.settings.os == "Windows":
-            if self.options.shared == True:
-                self.copy("*.dll", dst="bin", src="{}/bin".format(self._ice.build_dir), keep_path=False)
-            self.copy("*.lib", dst="lib", src="{}/lib".format(self._ice.build_dir), keep_path=False)
-
-        if self.settings.os == "Linux":
-            self.copy("*.so*", dst="bin", src="{}/bin".format(self._ice.build_dir), keep_path=False)
-            self.copy("*.a", dst="lib", src="{}/lib".format(self._ice.build_dir), keep_path=False)
+    def ice_package_artifacts(self):
+        self.ice_copy("*.dll", dst="bin", src="bin", keep_path=False)
+        self.ice_copy("*.lib", dst="lib", src="lib", keep_path=False)
+        self.ice_copy("*.so*", dst="bin", src="bin", keep_path=False)
+        self.ice_copy("*.a", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):
+        lib_suffix = "d" if self.settings.build_type == "Debug" else ""
+
         self.cpp_info.libs = []
-        self.cpp_info.libdirs = ['lib']
-        self.cpp_info.bindirs = ['bin']
+        self.cpp_info.libdirs = [ 'lib' ]
+        self.cpp_info.bindirs = [ 'bin' ]
         self.cpp_info.includedirs.append("include_{}".format(self.settings.build_type))
 
         if self.settings.os == "Windows":
             compiler_ver = "vcUnknown"
-            if self.settings.compiler.version == "16":
+            if self.settings.compiler.version == "192":
                 compiler_ver = "vc142"
-            if self.settings.compiler.version == "17":
+            if self.settings.compiler.version == "193":
                 compiler_ver = "vc143"
+            self.cpp_info.libs = ["assimp-{}-mt{}".format(compiler_ver, lib_suffix)]
 
-            if self.settings.build_type == "Debug":
-                self.cpp_info.libs = ["assimp-{}-mtd".format(compiler_ver)]
-            else:
-                self.cpp_info.libs = ["assimp-{}-mt".format(compiler_ver)]
         if self.settings.os == "Linux":
             self.cpp_info.libdirs.append("bin")
-            if self.settings.build_type == "Debug":
-                self.cpp_info.libs = ["assimpd"]
-            else:
-                self.cpp_info.libs = ["assimp"]
+            self.cpp_info.libs = [ "assimp" + lib_suffix ]

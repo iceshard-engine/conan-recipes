@@ -8,6 +8,9 @@ sources:
   "5.2.4":
     url: "https://github.com/assimp/assimp.git"
     tag: "v5.2.4"
+  "5.2.5":
+    url: "https://github.com/assimp/assimp.git"
+    tag: "v5.2.5"
 
 patches:
   "5.0.1":
