@@ -21,10 +21,11 @@ class SDL2Conan(ConanFile):
     }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.3@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
+    ice_toolchain = "cmake"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -49,13 +50,13 @@ class SDL2Conan(ConanFile):
 
     def generate(self):
         if self.settings.os == "Windows":
-            self.ice_generate("msbuild")
+            self.ice_generate("none", "msbuild")
         else:
-            self.ice_generate("cmake")
+            self.ice_generate()
 
     # Build both the debug and release builds
     def ice_build(self):
-        if self.settings.compiler == "msvc":
+        if self.settings.os == "Windows":
             self.ice_run_msbuild("VisualC/SDL.sln", retarget=True)
         else:
             self.ice_run_cmake()
@@ -63,11 +64,11 @@ class SDL2Conan(ConanFile):
     def ice_package_sources(self):
         self.ice_copy("COPYING.txt", src=".", dst="LICENSES") # (? before 2.0.22)
         self.ice_copy("LICENSE.txt", src=".", dst="LICENSES") # (starting from 2.0.22)
-        self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include/sdl2", keep_path=False)
+        self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
 
     def ice_package_artifacts(self):
         self.ice_copy("*SDL2.dll", src=".", dst="bin", keep_path=False)
-        self.ice_copy("*SDL2.lib", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*SDL2.lib", src=".", dst="lib", keep_path=False)
         self.ice_copy("*SDL2main.lib", src=".", dst="lib", keep_path=False)
 
         self.ice_copy("libSDL2-2.0[d].so*", src=".", dst="bin", keep_path=False)
