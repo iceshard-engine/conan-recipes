@@ -1,5 +1,5 @@
-from conans import ConanFile, MSBuild, tools
-from shutil import copyfile
+from conan import ConanFile
+from conan.tools.microsoft import NMakeToolchain
 import os
 
 class LuaConan(ConanFile):
@@ -13,54 +13,56 @@ class LuaConan(ConanFile):
     options = { "shared": [True, False] }
     default_options = { "shared":True }
 
-    exports_sources = ["premake5.lua"]
-
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
+    ice_generator = "none" # "premake5"
+    ice_toolchain = "makefile"
 
-    def init(self):
-        self.ice_init("premake5")
-        self.build_requires = self._ice.build_requires
+    def layout(self):
+        self.ice_layout("none")
+        self.folders.source = "."
+        self.folders.build = "lua-{}".format(self.version)
+
+    def generate(self):
+        tc = NMakeToolchain(self)
+        tc.generate()
 
     def ice_build(self):
-        self.ice_generate()
-        if self.settings.compiler == "Visual Studio":
-            self.ice_run_msbuild("Lua.sln")
-
+        if self.settings.compiler == 'msvc':
+            self.run("etc\\luavs.bat")
         else:
-            self.ice_run_make()
+            self.run("make")
 
-    def ice_package(self):
+    def ice_package_sources(self):
+        self.ice_copy("COPYRIGHT", src=".", dst="LICENSE")
+        self.ice_copy("*/etc/*.hpp", src=".", dst="include", keep_path=False)
+        for include in ["*/src/lua.h", "*/src/lualib.h", "*/src/lauxlib.h", "*/src/luaconf.h"]:
+            self.ice_copy(include, src=".", dst="include", keep_path=False)
 
-        self.copy("COPYRIGHT", src=self._ice.source_dir, dst="LICENSE")
+    def ice_package_artifacts(self):
+        self.ice_copy("*.exe", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
 
-        self.copy("*.hpp", "include", src="{}/etc".format(self._ice.source_dir), keep_path=False)
-        for include in ["lua.h", "lualib.h", "lauxlib.h", "luaconf.h"]:
-            self.copy(include, "include", src="{}/src".format(self._ice.source_dir), keep_path=False)
-
-        build_dir = os.path.join(self._ice.build_dir, "bin")
-        if self.settings.os == "Windows":
-            self.copy("*.exe", "bin", build_dir, keep_path=False)
-            self.copy("*.lib", "lib", build_dir, keep_path=False)
-            if self.options.shared:
-                self.copy("*.dll", "bin", build_dir, keep_path=False)
-        if self.settings.os == "Linux":
-            self.copy("*/lua", "bin", build_dir, keep_path=False)
-            self.copy("*/luac", "bin", build_dir, keep_path=False)
-
-            self.copy("*.a", "lib", build_dir, keep_path=False)
-            if self.options.shared:
-                self.copy("*.so", "lib", build_dir, keep_path=False)
-
+        self.ice_copy("*/lua", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*/luac", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.so", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
+        self.cpp_info.includedirs = [ "include" ]
         self.cpp_info.bindirs = [ "bin" ]
         self.cpp_info.libdirs = [ "lib" ]
         self.cpp_info.libs = [ "lua51" ]
 
+        # CMake info
+        self.cpp_info.set_property("cmake_file_name", "lua")
+        self.cpp_info.set_property("cmake_target_name", "lua")
+
         # Enviroment info
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        self.runenv_info.append_path("PATH", os.path.join(self.package_folder, "bin"))
+        self.buildenv_info.append_path("CMAKE_PROGRAM_PATH", os.path.join(self.package_folder, "bin"))
         if self.settings.os == "Linux":
-            self.env_info.LD_LIBRARY_PATH.append(os.path.join(self.package_folder, "lib"))
+            self.buildenv_info.LD_LIBRARY_PATH.append_path(os.path.join(self.package_folder, "lib"))
