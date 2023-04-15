@@ -1,5 +1,4 @@
-from conans import ConanFile, tools
-import os
+from conan import ConanFile, tools
 
 class IceBuildToolsProxyConan(ConanFile):
     name = "ice-build-tools-proxy"
@@ -22,4 +21,4 @@ class IceBuildToolsProxyConan(ConanFile):
 
     def build(self):
         with tools.chdir("{}-{}".format(self.name, self.version)):
-            self.run("conan create . ice-build-tools/{}@{}/{}".format(self.version, self.user, self.channel))
+            self.run("conan create . --version {} --user {} --channel {}".format(self.version, self.user, self.channel))
