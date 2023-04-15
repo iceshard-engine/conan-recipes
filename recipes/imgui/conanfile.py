@@ -1,6 +1,5 @@
-from conans import ConanFile, MSBuild, tools
-from shutil import copyfile
-import os
+from conan import ConanFile
+from conan.tools.files import rm, rmdir, copy
 
 class ImGuiConan(ConanFile):
     name = "imgui"
@@ -17,42 +16,36 @@ class ImGuiConan(ConanFile):
     exports_sources = ["premake5.lua"]
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.8.2@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable", "premake-generator/0.2.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
-    def init(self):
-        self.ice_init("premake5")
-        self.build_requires = self._ice.build_requires
+    ice_generator = "premake5"
+    ice_toolchain = "native"
 
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
-    # Extend source selection key generation
-    def ice_source_key(self, version):
-        if self.options.docking_branch == True:
-            return "{}-docking".format(version)
-        else:
-            return version
-
-    # Build both the debug and release builds
-    def ice_build(self):
+    def generate(self):
+        copy(self, "premake5.lua", src=self.export_sources_folder, dst=self.source_folder)
+        # Switch to the docking branch before continuing
+        if self.options.docking_branch:
+            self.run("git checkout docking")
         self.ice_generate()
 
-        if self.settings.compiler == "Visual Studio":
+    def ice_build(self):
+        if self.settings.compiler == "msvc":
             self.ice_run_msbuild("imgui.sln")
         else:
             self.ice_run_make()
 
-    def package(self):
-        self.copy("LICENSE.txt", src=self._ice.source_dir, dst="LICENSE")
-        self.copy("*.h", "include/imgui", src=self._ice.source_dir, keep_path=True, excludes=("examples/*", "misc/*"))
+    def ice_package_sources(self):
+        self.ice_copy("LICENSE.txt", src=".", dst="LICENSES")
+        self.ice_copy("*.h", src=".", dst="include/imgui", keep_path=True, excludes=("examples/*", "misc/*"))
 
-        build_bin_dir = os.path.join(self._ice.build_dir, "bin")
-        if self.settings.os == "Windows":
-            self.copy("*.lib", dst="lib", src=build_bin_dir, keep_path=False)
-        if self.settings.os == "Linux":
-            self.copy("*.a", dst="lib", src=build_bin_dir, keep_path=False)
+    def ice_package_artifacts(self):
+        self.ice_copy("*.lib", dst="lib", src="bin", keep_path=False)
+        self.ice_copy("*.a", dst="lib", src="bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libdirs = [ "lib" ]
