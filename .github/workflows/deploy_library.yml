@@ -62,13 +62,16 @@ on:
 jobs:
   deploy-windows-debug:
     name: 'Deploy ${{ github.event.inputs.library }} (Windows-Debug)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
     with:
       host: windows-latest
-      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_package_recipe: 'recipes/${{ github.event.inputs.library }}'
+      conan_package_deploy: '${{ github.event.inputs.library }}'
+      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_user: 'iceshard'
+      conan_package_channel: '${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
-      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
       conan_upload_options: '--all'
@@ -78,13 +81,16 @@ jobs:
 
   deploy-windows-release:
     name: 'Deploy ${{ github.event.inputs.library }} (Windows-Release)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
     with:
       host: windows-latest
-      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_package_recipe: 'recipes/${{ github.event.inputs.library }}'
+      conan_package_deploy: '${{ github.event.inputs.library }}'
+      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_user: 'iceshard'
+      conan_package_channel: '${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
-      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_upload_options: '--all'
@@ -94,13 +100,16 @@ jobs:
 
   deploy-linux-debug:
     name: 'Deploy ${{ github.event.inputs.library }} (Linux-Debug)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
     with:
       host: ubuntu-22.04
-      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_package_recipe: 'recipes/${{ github.event.inputs.library }}'
+      conan_package_deploy: '${{ github.event.inputs.library }}'
+      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_user: 'iceshard'
+      conan_package_channel: '${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
-      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
       conan_profile: '${{ github.event.inputs.conan_profile }}'
@@ -111,13 +120,16 @@ jobs:
 
   deploy-linux-release:
     name: 'Deploy ${{ github.event.inputs.library }} (Linux-Release)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan_deploy_package.yaml@main
+    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
     if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
     with:
       host: ubuntu-22.04
-      conan_package: '${{ github.event.inputs.library }}/${{ github.event.inputs.version }}@iceshard/${{ github.event.inputs.channel }}'
+      conan_package_recipe: 'recipes/${{ github.event.inputs.library }}'
+      conan_package_deploy: '${{ github.event.inputs.library }}'
+      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_user: 'iceshard'
+      conan_package_channel: '${{ github.event.inputs.channel }}'
       conan_upstream_remote: 'conan-iceshard'
-      conan_recipe_location: 'recipes/${{ github.event.inputs.library }}'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_profile: '${{ github.event.inputs.conan_profile }}'
