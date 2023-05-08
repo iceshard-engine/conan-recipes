@@ -74,7 +74,7 @@ jobs:
       conan_upstream_remote: 'conan-iceshard'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
-      conan_upload_options: '--all'
+      conan_upload_options: ''
     secrets:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
@@ -93,7 +93,7 @@ jobs:
       conan_upstream_remote: 'conan-iceshard'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
-      conan_upload_options: '--all'
+      conan_upload_options: ''
     secrets:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
@@ -113,7 +113,7 @@ jobs:
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Debug" ${{ github.event.inputs.conan_options }}'
       conan_profile: '${{ github.event.inputs.conan_profile }}'
-      conan_upload_options: '--all'
+      conan_upload_options: ''
     secrets:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
@@ -133,7 +133,7 @@ jobs:
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_profile: '${{ github.event.inputs.conan_profile }}'
-      conan_upload_options: '--all'
+      conan_upload_options: ''
     secrets:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
