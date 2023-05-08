@@ -32,8 +32,10 @@ class LuaConan(ConanFile):
     def ice_build(self):
         if self.settings.compiler == 'msvc':
             self.run("etc\\luavs.bat")
-        else:
-            self.run("make")
+        elif self.settings.os == "Linux":
+            self.run("make linux")
+        elif self.settings.os == "Macos":
+            self.run("make macosx")
 
     def ice_package_sources(self):
         self.ice_copy("COPYRIGHT", src=".", dst="LICENSE")
@@ -49,7 +51,7 @@ class LuaConan(ConanFile):
         self.ice_copy("*/lua", src=".", dst="bin", keep_path=False)
         self.ice_copy("*/luac", src=".", dst="bin", keep_path=False)
         self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
-        self.ice_copy("*.so", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.so", src=".", dst="bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.includedirs = [ "include" ]
@@ -64,5 +66,5 @@ class LuaConan(ConanFile):
         # Enviroment info
         self.runenv_info.append_path("PATH", os.path.join(self.package_folder, "bin"))
         self.buildenv_info.append_path("CMAKE_PROGRAM_PATH", os.path.join(self.package_folder, "bin"))
-        if self.settings.os == "Linux":
-            self.buildenv_info.LD_LIBRARY_PATH.append_path(os.path.join(self.package_folder, "lib"))
+        if self.settings.os == "Linux" or self.settings.os == "Macos":
+            self.buildenv_info.append_path("LD_LIBRARY_PATH", os.path.join(self.package_folder, "bin"))
