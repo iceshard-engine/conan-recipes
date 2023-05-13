@@ -10,7 +10,7 @@ class IceBuildToolsProxyConan(ConanFile):
     url = "https://github.com/iceshard-engine/ice-build-tools"
 
     def source(self):
-        source_info = self.conan_data["sources"][self.ice_source_key(self.version)]
+        source_info = self.conan_data["sources"][self.version]
         if "branch" in source_info:
             git = Git(self)
             git.clone(source_info["url"], target=".")
