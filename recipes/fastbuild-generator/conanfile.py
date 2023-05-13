@@ -49,6 +49,7 @@ class FastBuildDeps(object):
         test_req = self._conanfile.dependencies.test
 
         dependency_template = (
+            '// "name": "{name}", "package_folder": "{folder}"\n'
             '.ConanModuleEntry =\n'
             '[\n'
             '    .ConanModule_{name} =\n'
@@ -68,7 +69,7 @@ class FastBuildDeps(object):
         for require, dep in list(host_req.items()) + list(test_req.items()):
             deps = _FastBuildTemplate(dep.cpp_info)
             dep_name = dep.ref.name.replace("-", "_")
-            dep_flags = dependency_template.format(name=dep_name, deps=deps)
+            dep_flags = dependency_template.format(name=dep_name, folder=dep.package_folder, deps=deps)
             sections.append(dep_flags)
 
         ret[FASTBUILD_FILE] = "\n".join(sections)
@@ -78,7 +79,7 @@ class FastBuildDeps(object):
 # The package description
 class FASTBuildGeneratorPackage(ConanFile):
     name = "fastbuild-generator"
-    version = "0.4.0"
+    version = "0.4.1"
     user = "iceshard"
     channel = "stable"
 
