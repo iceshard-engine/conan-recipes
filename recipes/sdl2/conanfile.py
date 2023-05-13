@@ -62,8 +62,8 @@ class SDL2Conan(ConanFile):
             self.ice_run_cmake()
 
     def ice_package_sources(self):
-        self.ice_copy("*/COPYING.txt", src=".", dst="LICENSES") # (? before 2.0.22)
-        self.ice_copy("*/LICENSE.txt", src=".", dst="LICENSES") # (starting from 2.0.22)
+        self.ice_copy("COPYING.txt", src=self.build_folder, dst="LICENSES") # (? before 2.0.22)
+        self.ice_copy("LICENSE.txt", src=self.build_folder, dst="LICENSES") # (starting from 2.0.22)
         self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
 
     def ice_package_artifacts(self):
