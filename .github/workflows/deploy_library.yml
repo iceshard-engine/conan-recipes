@@ -23,6 +23,7 @@ on:
         - 'rapidxml_ns'
         - 'sdl2'
         - 'tracy'
+        - 'zlib'
       version:
         description: 'The library version to be deployed.'
         required: true
