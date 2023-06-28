@@ -48,6 +48,7 @@ class ZLibConan(ConanFile):
 
         self.cpp_info.includedirs = [ 'include' ]
         self.cpp_info.libdirs = [ 'lib' ]
-        self.cpp_info.libdirs.append("bin") if self.settings.os == "Linux"
+        if self.settings.os == "Linux":
+            self.cpp_info.libdirs.append("bin")
 
         self.cpp_info.libs = [ 'zlib' + lib_suffix ]
