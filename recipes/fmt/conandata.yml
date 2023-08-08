@@ -8,3 +8,6 @@ sources:
   "9.0.0":
     url: "https://github.com/fmtlib/fmt.git"
     tag: "9.0.0"
+  "10.0.0":
+    url: "https://github.com/fmtlib/fmt.git"
+    tag: "10.0.0"

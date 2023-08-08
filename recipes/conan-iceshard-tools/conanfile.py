@@ -31,8 +31,11 @@ class IceTools(object):
         self.ice_init(self.ice_generator or "none", toolchain)
 
     def build_requirements(self):
+        if self._ice.toolchain_name == "ninja":
+            self.tool_requires("ninja/[>=1.11.1 <2.0]")
+
         if self._ice.generator_name == "cmake":
-            self.tool_requires("cmake/3.25.3")
+            self.tool_requires("cmake/[>=3.25.3 <4.0]")
         if self._ice.generator_name == "premake5":
             self.tool_requires("premake-installer/5.0.0@iceshard/stable")
             self.python_requires["premake-generator"]
@@ -154,7 +157,10 @@ class IceTools(object):
         if generator == "cmake":
             # TODO: assert toolchain == 'cmake'
 
-            toolchain = CMakeToolchain(self)
+            if toolchain == "ninja":
+                toolchain = CMakeToolchain(self, "Ninja")
+            else:
+                toolchain = CMakeToolchain(self)
             deps = CMakeDeps(self)
 
             self.ice_generate_cmake(toolchain, deps)
@@ -257,6 +263,6 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.9.0"
+    version = "0.9.1"
     user = "iceshard"
     channel = "stable"

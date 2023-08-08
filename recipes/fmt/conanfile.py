@@ -13,11 +13,11 @@ class FmtConan(ConanFile):
     default_options = { "fPIC":True }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/0.9.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
-    ice_toolchain = "cmake"
+    ice_toolchain = "ninja"
 
     def config_options(self):
         if self.settings.os == "Windows":
