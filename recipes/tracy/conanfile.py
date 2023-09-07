@@ -8,8 +8,8 @@ class TracyConan(ConanFile):
 
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
-    options = { "shared":[True, False], "tracy_fibers":[True, False] }
-    default_options = { "shared":True, "tracy_fibers":False }
+    options = { "shared":[True, False], "tracy_fibers":[True, False], "manual_lifetime":[True, False] }
+    default_options = { "shared":True, "tracy_fibers":False, "manual_lifetime":False }
 
     # Iceshard conan tools
     python_requires = "conan-iceshard-tools/0.9.1@iceshard/stable"
@@ -21,6 +21,8 @@ class TracyConan(ConanFile):
 
     def ice_generate_cmake(self, toolchain, deps):
         toolchain.variables['TRACY_FIBERS'] = self.options.tracy_fibers
+        toolchain.variables['TRACY_MANUAL_LIFETIME'] = self.options.manual_lifetime
+        toolchain.variables['TRACY_DELAYED_INIT'] = self.options.manual_lifetime
 
     def ice_build(self):
         self.ice_run_cmake()
@@ -49,9 +51,11 @@ class TracyConan(ConanFile):
 
         if self.options.tracy_fibers:
             self.cpp_info.defines = ['TRACY_FIBERS']
+        if self.options.manual_lifetime:
+            self.cpp_info.defines = ['TRACY_DELAYED_INIT', 'TRACY_MANUAL_LIFETIME']
 
         if self.options.shared:
             self.cpp_info.bindirs = ['bin']
 
-            if self.settings.os == 'Linux':
+            if self.settings.os == 'Linux' or self.settings.os == 'Android':
                 self.cpp_info.libdirs.append('bin')
