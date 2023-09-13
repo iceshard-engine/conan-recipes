@@ -8,8 +8,20 @@ class TracyConan(ConanFile):
 
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
-    options = { "shared":[True, False], "tracy_fibers":[True, False], "manual_lifetime":[True, False] }
-    default_options = { "shared":True, "tracy_fibers":False, "manual_lifetime":False }
+    options = {
+        "shared":[True, False],
+        "fibers":[True, False],
+        "manual_lifetime":[True, False],
+        "no_system_tracing":[True, False],
+        "no_sampling":[True, False]
+    }
+    default_options = {
+        "shared":True,
+        "fibers":False,
+        "manual_lifetime":False,
+        "no_system_tracing":False,
+        "no_sampling":False
+    }
 
     # Iceshard conan tools
     python_requires = "conan-iceshard-tools/0.9.1@iceshard/stable"
@@ -20,9 +32,11 @@ class TracyConan(ConanFile):
     ice_toolchain = "ninja"
 
     def ice_generate_cmake(self, toolchain, deps):
-        toolchain.variables['TRACY_FIBERS'] = self.options.tracy_fibers
+        toolchain.variables['TRACY_FIBERS'] = self.options.fibers
         toolchain.variables['TRACY_MANUAL_LIFETIME'] = self.options.manual_lifetime
         toolchain.variables['TRACY_DELAYED_INIT'] = self.options.manual_lifetime
+        toolchain.variables['TRACY_NO_SYSTEM_TRACING'] = self.options.no_system_tracing
+        toolchain.variables['TRACY_NO_SAMPLING'] = self.options.no_sampling
 
     def ice_build(self):
         self.ice_run_cmake()
@@ -49,10 +63,14 @@ class TracyConan(ConanFile):
         self.cpp_info.libdirs = ['lib']
         self.cpp_info.libs = ['TracyClient']
 
-        if self.options.tracy_fibers:
+        if self.options.fibers:
             self.cpp_info.defines = ['TRACY_FIBERS']
         if self.options.manual_lifetime:
-            self.cpp_info.defines = ['TRACY_DELAYED_INIT', 'TRACY_MANUAL_LIFETIME']
+            self.cpp_info.defines.append('TRACY_DELAYED_INIT', 'TRACY_MANUAL_LIFETIME')
+        if self.options.no_system_tracing:
+            self.cpp_info.defines.append('TRACY_NO_SYSTEM_TRACING')
+        if self.options.no_sampling:
+            self.cpp_info.defines.append('TRACY_NO_SAMPLING')
 
         if self.options.shared:
             self.cpp_info.bindirs = ['bin']
