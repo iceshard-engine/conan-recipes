@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.15)
+project(imgui CXX)
+
+add_library(imgui
+    imgui.cpp
+    imgui_demo.cpp
+    imgui_draw.cpp
+    imgui_widgets.cpp
+)
+
+install(DIRECTORY "${CMAKE_SOURCE_DIR}"
+    DESTINATION "include/imgui"
+    FILES_MATCHING PATTERN "*.h"
+)
+
+install(TARGETS imgui)
