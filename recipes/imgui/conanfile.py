@@ -1,6 +1,6 @@
 from conan import ConanFile
-from conan.tools.files import rm, rmdir, copy
-from os.path import join, normpath
+from conan.tools.files import copy, rename
+from os.path import join
 
 class ImGuiConan(ConanFile):
     name = "imgui"
@@ -10,11 +10,11 @@ class ImGuiConan(ConanFile):
 
     # Setting and options
     settings = "os", "compiler", "arch", "build_type"
-    options = { "docking_branch":[True, False], "fPIC":[True, False] }
-    default_options = { "docking_branch":False, "fPIC":True }
+    options = { "fPIC":[True, False] }
+    default_options = { "fPIC":True }
 
     # Additional files to export
-    exports_sources = ["CMakeLists.txt"]
+    exports_sources = ["CMakeLists.txt", "CMakeLists.docking.txt"]
 
     # Iceshard conan tools
     python_requires = "conan-iceshard-tools/0.9.1@iceshard/stable"
@@ -27,9 +27,24 @@ class ImGuiConan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
-    def ice_build(self):
-        copy(self, "CMakeLists.txt", src=normpath(join(self.source_folder, "..")), dst=self.source_folder)
+    def ice_source_key(self, version):
+        return "{}-docking".format(version, self.channel) if self.channel == "docking" else version
 
+    def source(self):
+        # Get the selected sources
+        self.ice_source()
+
+        # Select the file we want to move to the source location
+        type_clists = ".docking" if self.channel == "docking" else ""
+        # file_clists = "CMakeLists{}.txt".format(type_clists)
+
+        src_clists = join(self.export_sources_folder, "CMakeLists{}.txt".format(type_clists))
+        dst_clists = join(self.source_folder, "CMakeLists.txt")
+
+        # Move the CMakeLists.txt file
+        rename(self, src=src_clists, dst=dst_clists)
+
+    def ice_build(self):
         variables = { }
         if self.settings.os != "Windows":
             variables['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
