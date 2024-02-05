@@ -24,6 +24,8 @@ sources:
       url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Windows-x64-v1.10.zip"
     "1.11":
       url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Windows-x64-v1.11.zip"
+    "1.12":
+      url: "https://fastbuild.org/downloads/v1.12/FASTBuild-Windows-x64-v1.12.zip"
   Linux:
     "1.02":
       url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Linux-x64-v1.02.zip"
@@ -45,6 +47,8 @@ sources:
       url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Linux-x64-v1.10.zip"
     "1.11":
       url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Linux-x64-v1.11.zip"
+    "1.12":
+      url: "https://fastbuild.org/downloads/v1.12/FASTBuild-Linux-x64-v1.12.zip"
   Macos:
     "1.07":
       url: "https://fastbuild.org/downloads/v1.07/FASTBuild-OSX-x64-v1.07.zip"
@@ -56,3 +60,5 @@ sources:
       url: "https://fastbuild.org/downloads/v1.10/FASTBuild-OSX-x64-v1.10.zip"
     "1.11":
       url: "https://fastbuild.org/downloads/v1.11/FASTBuild-OSX-x64-v1.11.zip"
+    "1.12":
+      url: "https://fastbuild.org/downloads/v1.12/FASTBuild-OSX-x64-v1.12.zip"
