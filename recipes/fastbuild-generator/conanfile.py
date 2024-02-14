@@ -79,7 +79,7 @@ class FastBuildDeps(object):
 # The package description
 class FASTBuildGeneratorPackage(ConanFile):
     name = "fastbuild-generator"
-    version = "0.4.1"
+    version = "0.4.2"
     user = "iceshard"
     channel = "stable"
 
