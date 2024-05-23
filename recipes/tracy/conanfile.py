@@ -6,6 +6,11 @@ class TracyConan(ConanFile):
     description = "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications."
     url = "https://github.com/wolfpld/tracy"
 
+    # Default values for version, user and channel
+    version_default = "0.10.0"
+    user = "iceshard"
+    channel = "stable"
+
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
     options = {
@@ -31,12 +36,19 @@ class TracyConan(ConanFile):
     ice_generator = "cmake"
     ice_toolchain = "ninja"
 
+    def set_version(self):
+        self.version = self.version or self.version_default
+
     def ice_generate_cmake(self, toolchain, deps):
         toolchain.variables['TRACY_FIBERS'] = self.options.fibers
         toolchain.variables['TRACY_MANUAL_LIFETIME'] = self.options.manual_lifetime
         toolchain.variables['TRACY_DELAYED_INIT'] = self.options.manual_lifetime
         toolchain.variables['TRACY_NO_SYSTEM_TRACING'] = self.options.no_system_tracing
         toolchain.variables['TRACY_NO_SAMPLING'] = self.options.no_sampling
+
+        # # For EmScripten we build with -pthread support and shared memory
+        # if self.settings.os == "Emscripten":
+        #     toolchain.extra_cxxflags = ['-pthread', '-sSHARED_MEMORY=1']
 
     def ice_build(self):
         self.ice_run_cmake()
