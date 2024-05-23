@@ -19,16 +19,21 @@ class IceProperties(object):
 class IceTools(object):
     def init(self):
         toolchain = None
+        generator = self.ice_generator
+
         if self.ice_toolchain != None:
             toolchain = self.ice_toolchain
-        elif self.ice_generator == "cmake":
+        elif sgenerator == "cmake":
             toolchain = "cmake"
-        elif self.ice_generator == "premake5":
+        elif generator == "premake5":
             toolchain = "native"
+        elif generator == "ibt" or generator == "ice-built-tools":
+            toolchain = "native"
+            generator = "ice-build-tools"
         else:
             toolchain = "none"
 
-        self.ice_init(self.ice_generator or "none", toolchain)
+        self.ice_init(generator or "none", toolchain)
 
     def build_requirements(self):
         if self._ice.toolchain_name == "ninja":
@@ -36,9 +41,15 @@ class IceTools(object):
 
         if self._ice.generator_name == "cmake":
             self.tool_requires("cmake/[>=3.25.3 <4.0]")
+
         if self._ice.generator_name == "premake5":
             self.tool_requires("premake-installer/5.0.0@iceshard/stable")
             self.python_requires["premake-generator"]
+
+        if self._ice.generator_name == "ice-build-tools":
+            self.tool_requires("ice-build-tools/[>=1.8.0 <2.0]@iceshard/stable")
+            self.tool_requires("fastbuild-installer/[>=1.12]@iceshard/stable")
+            self.tool_requires("moonscript-installer/0.5.0@iceshard/stable")
 
     def validate(self):
         if self.settings.build_type == None:
@@ -102,6 +113,8 @@ class IceTools(object):
             self._ice.generator_name = generator
         elif generator == "cmake":
             self._ice.generator_name = generator
+        elif generator == "ice-build-tools":
+            self._ice.generator_name = generator
         else:
             self.output.error("Unknown project generator")
 
@@ -119,6 +132,11 @@ class IceTools(object):
 
         if generator == "premake5":
             self.folders.generators = self.folders.source
+            self.folders.build = self.folders.source
+
+        if generator == "ice-build-tools":
+            self.folders.source = ""
+            self.folders.generators = "build/tools"
             self.folders.build = self.folders.source
 
     def ice_source_key(self, version):
@@ -203,6 +221,14 @@ class IceTools(object):
             # Generate premake5 projects
             self.run(premake_commandline, env=['iceshard_tools'])
 
+        if generator == "ice-build-tools":
+            vrun = VirtualBuildEnv(self)
+            vrun.generate(scope='run')
+
+            # Generate FastBuild dependencies
+            fbuild_deps = self.python_requires["fastbuild-generator"].module.FastBuildDeps(self)
+            fbuild_deps.generate()
+
         if toolchain == "msbuild":
             toolchain = MSBuildToolchain(self)
             self.ice_toolchain_msbuild(toolchain)
@@ -259,10 +285,24 @@ class IceTools(object):
 
         self.run("make -f Makefile config={} {}".format(str(build_type).lower(), "" if target == None else target), env=[])
 
+    def ice_run_ibt(self, target=None, build_type=None, script="ibt.bat"):
+        if target != None:
+            self.output.error("Providing specific targets is not supported as of now!")
+
+        if build_type == None:
+            build_type = self.settings.build_type
+
+        # Execute the IBT script with the 'conan' command
+        self.run("{} conan create -a {} -c {}".format(script, self.settings.arch, build_type))
+
 ##
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.9.1"
+    version = "1.0.0"
     user = "iceshard"
     channel = "stable"
+
+    # Since we need to have access to this generator we will always require on it.
+    # This might not be the best approach but it works for now
+    python_requires = "fastbuild-generator/[>=0.4.2 <1.0]@iceshard/stable"
