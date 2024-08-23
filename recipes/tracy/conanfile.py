@@ -7,7 +7,7 @@ class TracyConan(ConanFile):
     url = "https://github.com/wolfpld/tracy"
 
     # Default values for version, user and channel
-    version_default = "0.10.0"
+    version_default = "0.11.1"
     user = "iceshard"
     channel = "stable"
 
