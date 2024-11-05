@@ -60,4 +60,7 @@ class Box2DConan(ConanFile):
         if self.settings.os != "Windows":
             self.cpp_info.libdirs.append("bin")
 
-        self.cpp_info.libs = ["box2d"]
+        if self.settings.build_type == "Debug":
+            self.cpp_info.libs = ["box2dd"]
+        else:
+            self.cpp_info.libs = ["box2d"]
