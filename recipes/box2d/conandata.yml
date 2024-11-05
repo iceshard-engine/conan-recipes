@@ -1,0 +1,5 @@
+sources:
+  "3.0.0": # Version 3.0.0 with bugfixes commit.
+    url: "https://github.com/erincatto/box2d"
+    branch: "main"
+    commit: "87e13e44378afc42598a4f7e8b2d5289982cdda7"
