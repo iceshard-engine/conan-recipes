@@ -1,0 +1,15 @@
+diff --git a/ImGuizmo.cpp b/ImGuizmo.cpp
+index 2262e2b..6764f73 100755
+--- a/ImGuizmo.cpp
++++ b/ImGuizmo.cpp
+@@ -27,8 +27,8 @@
+ #ifndef IMGUI_DEFINE_MATH_OPERATORS
+ #define IMGUI_DEFINE_MATH_OPERATORS
+ #endif
+-#include "imgui.h"
+-#include "imgui_internal.h"
++#include <imgui/imgui.h>
++#include <imgui/imgui_internal.h>
+ #include "ImGuizmo.h"
+ 
+ #if defined(_MSC_VER) || defined(__MINGW32__)

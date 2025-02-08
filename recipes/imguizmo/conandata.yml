@@ -1,0 +1,10 @@
+sources:
+  "1.91.3":
+    url: "https://github.com/CedricGuillemet/ImGuizmo.git"
+    branch: "master"
+    commit: "b10e91756d32395f5c1fefd417899b657ed7cb88"
+
+patches:
+  "1.91.3":
+    - patch_file: patches/imgui_include_paths.patch
+      patch_description: Updates the ImGuizmo.cpp to use includes compatible with packages created under 'iceshard' user.
