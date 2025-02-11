@@ -1,0 +1,4 @@
+sources:
+  "3.0.5":
+    url: "https://github.com/rapidfuzz/rapidfuzz-cpp.git"
+    tag: "v3.0.5"
