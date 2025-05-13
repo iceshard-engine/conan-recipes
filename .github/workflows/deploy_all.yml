@@ -86,8 +86,11 @@ jobs:
     name: Deploy Tool
     needs: deploy-tools-dependencies
     strategy:
+      max-parallel: 1
       matrix:
         include:
+          - tool: 'moonscript-installer'
+            version: '0.5.0'
           - tool: 'ice-build-tools-proxy'
             package: 'ice-build-tools'
             version: '1.9.2'
