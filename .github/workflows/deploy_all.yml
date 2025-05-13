@@ -93,7 +93,7 @@ jobs:
             version: '0.5.0'
           - tool: 'ice-build-tools-proxy'
             package: 'ice-build-tools'
-            version: '1.9.2'
+            version: '1.9.3'
     uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: ${{ matrix.tool }}
