@@ -1,0 +1,96 @@
+name: Deploy Libraries (All)
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'The platform that the library should be deployed for.'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+        - all
+        - windows
+        - linux
+
+jobs:
+  deploy-libraries:
+    name: Deploy Library
+    strategy:
+      # Because regular libraries build in different times, we take the risk here
+      # max-parallel: 1
+      matrix:
+        include:
+          - library: 'catch2'
+            version: '3.3.2'
+          - library: 'fmt'
+            version: '10.0.0'
+          - library: 'tracy'
+            version: '0.11.1'
+    uses: ./.github/workflows/deploy_library_callable.yml
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-headeronly-libraries:
+    name: Deploy Header-Only Library
+    strategy:
+      # The current conan repository of iceshard has issues with parallel uploads
+      max-parallel: 1
+      matrix:
+        include:
+          - library: 'cli11'
+            version: '2.4.1'
+          - library: 'rapidfuzz_cpp'
+            version: '3.0.5'
+          - library: 'rapidxml_ns'
+            version: '1.13.2'
+    uses: ./.github/workflows/deploy_library_callable.yml
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-font-libraries:
+    name: Deploy Font Library
+    strategy:
+      # Because the font libraries have dependencies we build them in order
+      max-parallel: 1
+      matrix:
+        include:
+          - library: 'freetype'
+            version: '2.12.1'
+          - library: 'msdfgen'
+            version: '1.9.2'
+          - library: 'msdf_atlas_gen'
+            version: '1.2.2'
+    uses: ./.github/workflows/deploy_library_callable.yml
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-assimp-library:
+    name: Deploy Assimp Library
+    uses: ./.github/workflows/deploy_library_callable.yml
+    with:
+      library: 'assimp'
+      version: '5.2.5'
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}

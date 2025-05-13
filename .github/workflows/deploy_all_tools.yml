@@ -1,30 +1,21 @@
-name: Deploy All (manual)
-run-name: Deploy ${{ inputs.category }} (All)
+name: Deploy Tools (All)
 
 on:
   workflow_dispatch:
     inputs:
-      category:
-        description: 'Deployment of tools or libraries for the given user and channel'
-        required: true
-        type: choice
-        options:
-        - 'Tools'
-        - 'Libraries'
       platform:
         description: 'The platform that the library should be deployed for.'
         required: true
         type: choice
         default: 'all'
         options:
+        - all
         - windows
         - linux
-
 
 jobs:
   deploy-basic-tools:
     name: Deploy Basic Tools
-    if: ${{ inputs.category == 'Tools' }}
     strategy:
       matrix:
         include:
