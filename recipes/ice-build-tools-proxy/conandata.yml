@@ -36,6 +36,6 @@ sources:
   "1.7.0":
     url: "https://github.com/iceshard-engine/ice-build-tools"
     tag: "v1.7.0"
-  "1.9.2":
+  "1.9.3":
     url: "https://github.com/iceshard-engine/ice-build-tools"
-    tag: "v1.9.2"
+    tag: "v1.9.3"
