@@ -20,6 +20,7 @@ on:
         - windows
         - linux
 
+
 jobs:
   deploy-basic-tools:
     name: Deploy Basic Tools
@@ -35,35 +36,32 @@ jobs:
             version: '5.0.0'
           - tool: 'premake-generator'
             version: '0.2.0'
-    runs-on: 'ubuntu-latest'
-    steps:
-      - name: Deploy (${{ matrix.tool }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_tool.yml
-        with:
-          tool: ${{ matrix.tool }}
-          version: ${{ matrix.version }}
-          user: iceshard
-          channel: stable
-          platform: ${{ inputs.platform }}
+    uses: ./.github/workflows/utility/deploy_tool.yml
+    with:
+      tool: ${{ matrix.tool }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
 
   deploy-conan-iceshard-tools:
     name: Deploy (conan-iceshard-tools, 1.0.0)
     needs: deploy-basic-tools
-    runs-on: 'ubuntu-latest'
-    steps:
-      - name: Deploy ()
-        uses: ./.github/workflows/deploy_tool.yml
-        with:
-          tool: 'conan-iceshard-tools'
-          version: '1.0.0'
-          user: iceshard
-          channel: stable
-          platform: ${{ inputs.platform }}
+    uses: ./.github/workflows/utility/deploy_tool.yml
+    with:
+      tool: 'conan-iceshard-tools'
+      version: '1.0.0'
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
 
   deploy-tools-dependencies:
     name: Deploy Tools Dependencies
     needs: deploy-conan-iceshard-tools
-    runs-on: 'ubuntu-latest'
     strategy:
       max-parallel: 1
       matrix:
@@ -74,33 +72,32 @@ jobs:
             version: '0.12.0'
           - library: lua-filesystem
             version: '1.8.0'
-    steps:
-      - name: Deploy (${{ matrix.library }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_library.yml
-        with:
-          library: ${{ matrix.library }}
-          version: ${{ matrix.version }}
-          user: iceshard
-          channel: stable
-          platform: ${{ inputs.platform }}
+    uses: ./.github/workflows/utility/deploy_library.yml
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
 
   deploy-tools:
     name: Deploy Tools
     needs: deploy-tools-dependencies
-    runs-on: 'ubuntu-latest'
     strategy:
       matrix:
         include:
           - tool: 'ice-build-tools-proxy'
             package: 'ice-build-tools'
             version: '1.9.2'
-    steps:
-      - name: Deploy (${{ matrix.tool }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_tool.yml
-        with:
-          tool: ${{ matrix.tool }}
-          version: ${{ matrix.version }}
-          user: iceshard
-          channel: stable
-          platform: ${{ inputs.platform }}
-          conan_deploy_package: ${{ matrix.package }}
+    uses: ./.github/workflows/utility/deploy_tool.yml
+    with:
+      tool: ${{ matrix.tool }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+      conan_deploy_package: ${{ matrix.package }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
