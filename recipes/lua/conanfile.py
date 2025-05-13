@@ -31,7 +31,7 @@ class LuaConan(ConanFile):
         tc.generate()
 
         chdir(self, self.source_folder)
-        replace_in_file(self, os.path.join(self.source_folder, "src/Makefile"), "-Wall $(MYCFLAGS)", "-Wall -fPIC $(MYCFLAGS)")
+        replace_in_file(self, os.path.join(self.source_folder, "lua-{}/src/Makefile".format(self.version)), "-Wall $(MYCFLAGS)", "-Wall -fPIC $(MYCFLAGS)")
 
     def ice_build(self):
         if self.settings.compiler == 'msvc':
