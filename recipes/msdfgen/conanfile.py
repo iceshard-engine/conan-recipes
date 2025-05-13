@@ -22,7 +22,7 @@ class MsdfGenConanRecipe(ConanFile):
     exports_sources = ["patches/*", "Findmsdfgen.cmake"]
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/0.9.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
