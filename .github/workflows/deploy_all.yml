@@ -36,7 +36,7 @@ jobs:
             version: '5.0.0'
           - tool: 'premake-generator'
             version: '0.2.0'
-    uses: ./.github/workflows/utility/deploy_tool.yml
+    uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: ${{ matrix.tool }}
       version: ${{ matrix.version }}
@@ -49,7 +49,7 @@ jobs:
   deploy-conan-iceshard-tools:
     name: Deploy (conan-iceshard-tools, 1.0.0)
     needs: deploy-basic-tools
-    uses: ./.github/workflows/utility/deploy_tool.yml
+    uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: 'conan-iceshard-tools'
       version: '1.0.0'
@@ -72,7 +72,7 @@ jobs:
             version: '0.12.0'
           - library: lua-filesystem
             version: '1.8.0'
-    uses: ./.github/workflows/utility/deploy_library.yml
+    uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ matrix.library }}
       version: ${{ matrix.version }}
@@ -91,7 +91,7 @@ jobs:
           - tool: 'ice-build-tools-proxy'
             package: 'ice-build-tools'
             version: '1.9.2'
-    uses: ./.github/workflows/utility/deploy_tool.yml
+    uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: ${{ matrix.tool }}
       version: ${{ matrix.version }}

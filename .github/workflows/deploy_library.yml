@@ -63,7 +63,7 @@ on:
 jobs:
   deploy-library:
     name: 'Deploy ${{ github.event.inputs.library }}'
-    uses: ./.github/workflows/utility/deploy_library.yml
+    uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ inputs.library }}
       version: ${{ inputs.version }}

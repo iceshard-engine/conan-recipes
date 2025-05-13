@@ -53,7 +53,7 @@ on:
 jobs:
   deploy-tool:
     name: 'Deploy ${{ github.event.inputs.tool }}'
-    uses: ./.github/workflows/utility/deploy_tool.yml
+    uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: ${{ inputs.tool }}
       version: ${{ inputs.version }}
