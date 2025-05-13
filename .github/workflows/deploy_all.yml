@@ -24,7 +24,6 @@ jobs:
   deploy-basic-tools:
     name: Deploy Basic Tools
     if: ${{ inputs.category == 'Tools' }}
-    continue-on-error: true
     strategy:
       matrix:
         include:
@@ -39,7 +38,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - name: Deploy (${{ matrix.tool }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_tool.yml@main
+        uses: ./.github/workflows/deploy_tool.yml
         with:
           tool: ${{ matrix.tool }}
           version: ${{ matrix.version }}
@@ -53,7 +52,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - name: Deploy ()
-        uses: ./.github/workflows/deploy_tool.yml@main
+        uses: ./.github/workflows/deploy_tool.yml
         with:
           tool: 'conan-iceshard-tools'
           version: '1.0.0'
@@ -77,7 +76,7 @@ jobs:
             version: '1.8.0'
     steps:
       - name: Deploy (${{ matrix.library }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_library.yml@main
+        uses: ./.github/workflows/deploy_library.yml
         with:
           library: ${{ matrix.library }}
           version: ${{ matrix.version }}
@@ -97,7 +96,7 @@ jobs:
             version: '1.9.2'
     steps:
       - name: Deploy (${{ matrix.tool }}/${{ matrix.version }})
-        uses: ./.github/workflows/deploy_tool.yml@main
+        uses: ./.github/workflows/deploy_tool.yml
         with:
           tool: ${{ matrix.tool }}
           version: ${{ matrix.version }}
