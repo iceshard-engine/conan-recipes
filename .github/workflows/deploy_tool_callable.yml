@@ -1,4 +1,4 @@
-name: Deploy Tool (Utility)
+name: Deploy Tool (utility)
 run-name: Deploy ${{ inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
 on:

@@ -1,4 +1,4 @@
-name: Deploy Library (Utility)
+name: Deploy Library (utility)
 run-name: Deploy ${{ inputs.library }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
 on:
