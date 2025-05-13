@@ -95,7 +95,7 @@ class MoonscriptInstallerConan(ConanFile):
 
         # Lua paths info
         for name in self.folder_names:
-            self.runenv_info.append_path("LUA_PATH", join(self.package_folder, "scripts/{}/?.lua".format(name)))
+            self.runenv_info.append("LUA_PATH", join(self.package_folder, "scripts/{}/?.lua".format(name)), separator=';')
 
         # Extra entry
-        self.runenv_info.append_path("LUA_PATH", join(self.package_folder, "scripts/moonscript/?/init.lua"))
+        self.runenv_info.append("LUA_PATH", join(self.package_folder, "scripts/moonscript/?/init.lua"), separator=';')
