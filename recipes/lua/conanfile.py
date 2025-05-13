@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.microsoft import NMakeToolchain
+from conan.tools.files import chdir, replace_in_file
 import os
 
 class LuaConan(ConanFile):
