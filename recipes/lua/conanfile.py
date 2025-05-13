@@ -57,7 +57,7 @@ class LuaConan(ConanFile):
         self.cpp_info.includedirs = [ "include" ]
         self.cpp_info.bindirs = [ "bin" ]
         self.cpp_info.libdirs = [ "lib" ]
-        self.cpp_info.libs = [ "lua51" ]
+        self.cpp_info.libs = [ "lua" ]
 
         # CMake info
         self.cpp_info.set_property("cmake_file_name", "lua")

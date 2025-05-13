@@ -1,5 +1,5 @@
 name: Deploy All (manual)
-run-name: Deploy All (${{ inputs.category }})
+run-name: Deploy ${{ inputs.category }} (All)
 
 on:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
       conan_password: ${{ secrets.CONAN_PASSWORD }}
 
   deploy-conan-iceshard-tools:
-    name: Deploy (conan-iceshard-tools, 1.0.0)
+    name: Deploy Tool (conan-iceshard-tools, 1.0.0)
     needs: deploy-basic-tools
     uses: ./.github/workflows/deploy_tool_callable.yml
     with:
@@ -83,7 +83,7 @@ jobs:
       conan_password: ${{ secrets.CONAN_PASSWORD }}
 
   deploy-tools:
-    name: Deploy Tools
+    name: Deploy Tool
     needs: deploy-tools-dependencies
     strategy:
       matrix:
