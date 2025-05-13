@@ -31,18 +31,20 @@ class LuaFilesystemConan(ConanFile):
 
     def generate(self):
         if self.settings.os == "Windows":
+            # Generate enviroment variables that are auto-consumed by nmake.exe
             deps = NMakeDeps(self)
-            deps_vars = deps.vars()
+            deps.generate()
 
+            # Generates enviroment variables allowing to a access nmake.exe
             tc = NMakeToolchain(self)
-            env = tc.environment()
-            env.append('CFLAGS', deps_vars.get('CL'))
-            env.define('LUA_LIB', deps_vars.get('_LINK_'))
-            env.define('LIB', deps_vars.get('LIB'))
-            tc.generate(env)
+            tc.generate()
 
-            chdir(self, self.source_folder)
-            replace_in_file(self, os.path.join(self.source_folder, "Makefile.win"), "include config.win", "#test")
+            # Replace unnecessary or old values in support of conan
+            path_makefile = os.path.join(self.source_folder, "Makefile.win")
+            replace_in_file(self, path_makefile, "include config.win", "# Removed line to consume conan provided variables")
+            replace_in_file(self, path_makefile, "$(CFLAGS)", "$(CL)")
+            replace_in_file(self, path_makefile, "\"$(LUA_LIB)\"", "")
+
         else:
             deps = MakeDeps(self)
             deps.generate()
