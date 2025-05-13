@@ -29,6 +29,9 @@ class LuaConan(ConanFile):
         tc = NMakeToolchain(self)
         tc.generate()
 
+        chdir(self, self.source_folder)
+        replace_in_file(self, "src/Makefile", "-Wall $(MYCFLAGS)", "-Wall -fPIC $(MYCFLAGS)")
+
     def ice_build(self):
         if self.settings.compiler == 'msvc':
             self.run("etc\\luavs.bat")
