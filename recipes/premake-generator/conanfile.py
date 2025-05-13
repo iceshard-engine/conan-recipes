@@ -1,7 +1,6 @@
 
 from conan import ConanFile
 from conan.internal import check_duplicated_generator
-from conans.model.build_info import CppInfo
 from conans.util.files import save
 
 PREMAKE_FILE = "conandeps.lua"
@@ -46,16 +45,6 @@ class PremakeDeps(object):
         generator_files = self.content
         for generator_file, content in generator_files.items():
             save(generator_file, content)
-
-    def _get_cpp_info(self):
-        ret = CppInfo()
-        for dep in self._conanfile.dependencies.host.values():
-            dep_cppinfo = dep.cpp_info.copy()
-            dep_cppinfo.set_relative_base_folder(dep.package_folder)
-            # In case we have components, aggregate them, we do not support isolated "targets"
-            # dep_cppinfo.aggregate_components()
-            ret.merge(dep_cppinfo)
-        return ret
 
     @property
     def content(self):
