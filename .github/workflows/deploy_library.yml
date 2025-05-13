@@ -130,7 +130,7 @@ jobs:
       conan_package_version: '${{ github.event.inputs.version }}'
       conan_package_user: 'iceshard'
       conan_package_channel: '${{ github.event.inputs.channel }}'
-      conan_upstream_remote: 'conan-iceshard'
+      conan_upstream_remote: 'conan2-iceshard'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
       conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
       conan_profile: '${{ github.event.inputs.conan_profile }}'
