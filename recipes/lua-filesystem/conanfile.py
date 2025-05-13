@@ -86,4 +86,4 @@ class LuaFilesystemConan(ConanFile):
         if self.settings.os == "Windows":
             self.runenv_info.append("LUA_CPATH", os.path.join(self.package_folder, "bin/?.dll"), separator=';')
         if self.settings.os == "Linux":
-            self.runenv_info.append("LUA_CPATH", os.path.join(self.package_folder, "lib/lib?.so"), separator=';')
+            self.runenv_info.append("LUA_CPATH", os.path.join(self.package_folder, "lib/?.so"), separator=';')
