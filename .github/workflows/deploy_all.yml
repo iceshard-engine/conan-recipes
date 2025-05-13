@@ -1,0 +1,48 @@
+name: Deploy All (manual)
+run-name: Deploy <${{ inputs.category }}>@iceshard/${{ inputs.channel }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: 'Deployment of tools or libraries for the given user and channel'
+        required: true
+        type: choice
+        options:
+        - 'Tools'
+        - 'Libraries'
+      platform:
+        description: 'The platform that the library should be deployed for.'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+        - windows
+        - linux
+
+
+jobs:
+  deploy_basic_tools:
+    if: ${{ inputs.category == 'Tools' }}
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          - tool: 'fastbuild-installer'
+            version: '1.12'
+          - tool: 'fastbuild-generator'
+            version: '0.4.2'
+          - tool: 'premake-installer'
+            version: '5.0.0'
+          - tool: 'premake-generator'
+            version: '0.2.0'
+    runs-on: 'linux-latest'
+    steps:
+      - name: Deploy (${{ matrix.tool }}/${{ matrix.version }})
+        uses: ./.github/workflows/deploy_tool.yml@main
+        with:
+          tool: ${{ matrix.tool }}
+          version: ${{ matrix.version }}
+          user: iceshard
+          channel: stable
+          platform: ${{ inputs.platform }}
