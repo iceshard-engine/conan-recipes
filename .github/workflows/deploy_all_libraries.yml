@@ -37,6 +37,27 @@ jobs:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
 
+  deploy-libraries-zlib-assimp:
+    name: Deploy Library
+    uses: ./.github/workflows/deploy_library_callable.yml
+    strategy:
+      # Because the assimp has a dependency on zlib
+      max-parallel: 1
+      matrix:
+        include:
+          - library: 'zlib'
+            version: '1.2.13'
+          - library: 'assimp'
+            version: '5.2.5'
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
   deploy-headeronly-libraries:
     name: Deploy Header-Only Library
     strategy:
@@ -77,18 +98,6 @@ jobs:
     with:
       library: ${{ matrix.library }}
       version: ${{ matrix.version }}
-      channel: stable
-      platform: ${{ inputs.platform }}
-    secrets:
-      conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
-
-  deploy-assimp-library:
-    name: Deploy Assimp Library
-    uses: ./.github/workflows/deploy_library_callable.yml
-    with:
-      library: 'assimp'
-      version: '5.2.5'
       channel: stable
       platform: ${{ inputs.platform }}
     secrets:
