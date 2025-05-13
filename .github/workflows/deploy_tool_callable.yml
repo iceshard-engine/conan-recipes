@@ -41,36 +41,36 @@ on:
 
 jobs:
   deploy-windows-release:
-    name: 'Deploy ${{ github.event.inputs.tool }} (Windows)'
+    name: 'Deploy ${{ inputs.tool }} (Windows)'
     uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
-    if: ${{ github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' }}
+    if: ${{ inputs.platform == 'windows' || inputs.platform == 'all' }}
     with:
       host: windows-latest
-      conan_package_recipe: 'recipes/${{ github.event.inputs.tool }}'
-      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_recipe: 'recipes/${{ inputs.tool }}'
+      conan_package_version: '${{ inputs.version }}'
       conan_package_user: 'iceshard'
-      conan_package_channel: '${{ github.event.inputs.channel }}'
-      conan_package_deploy: ${{ github.event.inputs.conan_deploy_package || github.event.inputs.tool }}
+      conan_package_channel: '${{ inputs.channel }}'
+      conan_package_deploy: ${{ inputs.conan_deploy_package || inputs.tool }}
       conan_upstream_remote: 'conan2-iceshard'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
-      conan_options: '-s"build_type=Release" ${{ github.event.inputs.conan_options }}'
+      conan_options: '-s"build_type=Release" ${{ inputs.conan_options }}'
       conan_upload_options: ''
     secrets: inherit
 
   deploy-linux-release:
-    name: 'Deploy ${{ github.event.inputs.tool }} (Linux)'
+    name: 'Deploy ${{ inputs.tool }} (Linux)'
     uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
-    if: ${{ github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' }}
+    if: ${{ inputs.platform == 'linux' || inputs.platform == 'all' }}
     with:
       host: ubuntu-22.04
-      conan_package_recipe: 'recipes/${{ github.event.inputs.tool }}'
-      conan_package_version: '${{ github.event.inputs.version }}'
+      conan_package_recipe: 'recipes/${{ inputs.tool }}'
+      conan_package_version: '${{ inputs.version }}'
       conan_package_user: 'iceshard'
-      conan_package_channel: '${{ github.event.inputs.channel }}'
-      conan_package_deploy: ${{ github.event.inputs.conan_deploy_package || github.event.inputs.tool }}
+      conan_package_channel: '${{ inputs.channel }}'
+      conan_package_deploy: ${{ inputs.conan_deploy_package || inputs.tool }}
       conan_upstream_remote: 'conan2-iceshard'
       conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
-      conan_options: '-s"build_type=Release" --build ${{ github.event.inputs.tool }}/* ${{ github.event.inputs.conan_options }}'
+      conan_options: '-s"build_type=Release" --build ${{ inputs.tool }}/* ${{ inputs.conan_options }}'
       conan_profile: 'default'
       conan_upload_options: ''
     secrets: inherit
