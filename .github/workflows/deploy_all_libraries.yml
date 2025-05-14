@@ -27,6 +27,10 @@ jobs:
             version: '10.0.0'
           - library: 'tracy'
             version: '0.11.1'
+          - library: 'sdl2'
+            version: '2.0.22'
+          - library: 'box2d'
+            version: '3.0.0'
     uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ matrix.library }}
@@ -49,6 +53,27 @@ jobs:
             version: '1.2.13'
           - library: 'assimp'
             version: '5.2.5'
+    with:
+      library: ${{ matrix.library }}
+      version: ${{ matrix.version }}
+      channel: stable
+      platform: ${{ inputs.platform }}
+    secrets:
+      conan_user: 'iceshard'
+      conan_password: ${{ secrets.CONAN_PASSWORD }}
+
+  deploy-libraries-imgui:
+    name: Deploy Library
+    uses: ./.github/workflows/deploy_library_callable.yml
+    strategy:
+      # Because the assimp has a dependency on zlib
+      max-parallel: 1
+      matrix:
+        include:
+          - library: 'imgui'
+            version: '1.90'
+          - library: 'imguizmo'
+            version: '1.91.3'
     with:
       library: ${{ matrix.library }}
       version: ${{ matrix.version }}
