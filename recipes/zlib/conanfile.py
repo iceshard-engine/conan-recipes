@@ -42,13 +42,12 @@ class ZLibConan(ConanFile):
     def package_info(self):
         lib_suffix = "d" if self.settings.build_type == "Debug" else ""
 
-        self.cpp_info.set_property("cmake_file_name", "ZLIB")
-        self.cpp_info.set_property("cmake_target_name", "ZLIB")
-        self.cpp_info.set_property("cmake_find_package", "ZLIB")
-
         self.cpp_info.includedirs = [ 'include' ]
         self.cpp_info.libdirs = [ 'lib' ]
         if self.settings.os == "Linux":
             self.cpp_info.libdirs.append("bin")
 
-        self.cpp_info.libs = [ 'zlib' + lib_suffix ]
+        if self.settings.os == "Windows":
+            self.cpp_info.libs = [ 'zlib' + lib_suffix ]
+        else:
+            self.cpp_info.libs = [ 'z' ]
