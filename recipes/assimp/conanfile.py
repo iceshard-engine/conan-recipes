@@ -49,7 +49,9 @@ class AssimpConan(ConanFile):
     def ice_generate_cmake(self, tc, deps):
         tc.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
         tc.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
-        tc.variables["CMAKE_CXX_FLAGS_INIT"] = '-Wno-nontrivial-memcall'
+
+        if self.settings.compiler == 'clang':
+            tc.variables["CMAKE_CXX_FLAGS_INIT"] = '-Wno-nontrivial-memcall'
 
     # Build both the debug and release builds
     def ice_build(self):
