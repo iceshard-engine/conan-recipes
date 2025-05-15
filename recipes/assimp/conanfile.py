@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.tools.env import VirtualBuildEnv
 
 class AssimpConan(ConanFile):
     name = "assimp"
@@ -45,6 +46,11 @@ class AssimpConan(ConanFile):
             del self.options.fPIC
             del self.options.strip_symbols
 
+    def ice_generate_cmake(self, tc, deps):
+        tc.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
+        tc.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
+        tc.variables["CMAKE_CXX_FLAGS_INIT"] = '-Wno-nontrivial-memcall'
+
     # Build both the debug and release builds
     def ice_build(self):
         variables = { }
@@ -73,9 +79,9 @@ class AssimpConan(ConanFile):
         if self.settings.os == "Linux":
             if self.options.strip_symbols == True:
                 if self.settings.build_type == "Debug":
-                    self.run("strip ../build/bin/libassimpd.so")
+                    self.run("strip bin/libassimpd.so")
                 else:
-                    self.run("strip ../build/bin/libassimp.so")
+                    self.run("strip bin/libassimp.so")
 
     def ice_package_sources(self):
         self.ice_copy("LICENSE.md", src=".", dst="LICENSES", keep_path=False)
@@ -89,7 +95,7 @@ class AssimpConan(ConanFile):
     def ice_package_artifacts(self):
         self.ice_copy("*.dll", dst="bin", src="bin", keep_path=False)
         self.ice_copy("*.lib", dst="lib", src="lib", keep_path=False)
-        self.ice_copy("*.so*", dst="bin", src="bin", keep_path=False)
+        self.ice_copy("*.so", dst="bin", src="bin", keep_path=False)
         self.ice_copy("*.a", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):
