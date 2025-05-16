@@ -1,5 +1,7 @@
 from conan import ConanFile
 from conan.tools.env import VirtualBuildEnv
+from conan.tools.files import replace_in_file
+import os
 
 class AssimpConan(ConanFile):
     name = "assimp"
@@ -52,6 +54,14 @@ class AssimpConan(ConanFile):
 
         if self.settings.compiler == 'clang':
             tc.variables["CMAKE_CXX_FLAGS_INIT"] = '-Wno-nontrivial-memcall'
+
+        if self.settings.os == "Windows":
+            main_cmake = os.path.join(self.source_folder, "CMakeLists.txt")
+            replace_in_file(self, main_cmake, "ZLIB_FOUND", "zlib_FOUND")
+            replace_in_file(self, main_cmake, "ZLIB_INCLUDE_DIR", "zlib_INCLUDE_DIR")
+
+            code_cmake = os.path.join(self.source_folder, "code", "CMakeLists.txt")
+            replace_in_file(self, code_cmake, "ZLIB_LIBRARIES", "zlib_LIBRARIES")
 
     # Build both the debug and release builds
     def ice_build(self):
