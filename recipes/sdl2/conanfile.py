@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.tools.files import get
 
 class SDL2Conan(ConanFile):
     name = "sdl2"
@@ -44,15 +45,23 @@ class SDL2Conan(ConanFile):
         if self.settings.os == "Windows":
             self.ice_layout("msbuild")
             self.folders.source = "."
-            self.folders.build = "SDL2-{}".format(self.version)
+            self.folders.build = "sdl2-{}".format(self.version)
         else:
             self.ice_layout("cmake")
+
+    def source(self):
+        source_info = self.conan_data["sources"][self.ice_source_key(self.version)]
+        get(self, **source_info, strip_root=True)
 
     def generate(self):
         if self.settings.os == "Windows":
             self.ice_generate("none", "msbuild")
         else:
             self.ice_generate()
+
+    def ice_generate_cmake(self, tc, deps):
+        tc.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
+        tc.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
 
     # Build both the debug and release builds
     def ice_build(self):
@@ -67,42 +76,32 @@ class SDL2Conan(ConanFile):
         self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
 
     def ice_package_artifacts(self):
-        self.ice_copy("*SDL2.dll", src=".", dst="bin", keep_path=False)
-        self.ice_copy("*SDL2.lib", src=".", dst="lib", keep_path=False)
-        self.ice_copy("*SDL2main.lib", src=".", dst="lib", keep_path=False)
-
-        self.ice_copy("libSDL2-2.0[d].so*", src=".", dst="bin", keep_path=False)
-        self.ice_copy("libSDL2main[d].a", src=".", dst="lib", keep_path=False)
-        self.ice_copy("libSDL2[d].a", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
+        self.ice_copy("*.so", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
+        lib_suffix = "d" if self.settings.build_type == "Debug" else ""
+
+        self.cpp_info.libs = []
+        self.cpp_info.libdirs = [ 'lib' ]
+        self.cpp_info.bindirs = [ 'bin' ]
+        self.cpp_info.includedirs = [ 'include' ]
+
         if self.settings.os == "Windows":
             self.cpp_info.libs = ['SDL2']
-            self.cpp_info.libdirs = ['lib']
-            self.cpp_info.bindirs = ['bin']
-            self.cpp_info.includedirs = ["include"]
 
             if self.options.sdl2main == True:
                 self.cpp_info.libs.append("SDL2main")
 
         if self.settings.os == "Linux":
-            self.cpp_info.libdirs = ['lib']
+            self.cpp_info.libdirs.append("bin")
 
             if self.options.shared:
-                self.cpp_info.bindirs = ['bin']
-                self.cpp_info.libdirs.append("bin")
-                if self.settings.build_type == "Debug":
-                    self.cpp_info.libs = ['SDL2-2.0d']
-                else:
-                    self.cpp_info.libs = ['SDL2-2.0']
+                self.cpp_info.libs = [ 'SDL2-2.0' + lib_suffix ]
             else:
-                if self.settings.build_type == "Debug":
-                    self.cpp_info.libs = ['SDL2d']
-                else:
-                    self.cpp_info.libs = ['SDL2']
+                self.cpp_info.libs = [ 'SDL2' + lib_suffix ]
 
             if self.options.sdl2main == True:
-                if self.settings.build_type == "Debug":
-                    self.cpp_info.libs = ['SDL2maind']
-                else:
-                    self.cpp_info.libs = ['SDL2main']
+                self.cpp_info.libs.append('SDL2main' + lib_suffix)
