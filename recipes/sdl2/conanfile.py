@@ -44,7 +44,7 @@ class SDL2Conan(ConanFile):
     def layout(self):
         if self.settings.os == "Windows":
             self.ice_layout("msbuild")
-            self.folders.source = "."
+            self.folders.source = "sdl2-{}".format(self.version)
             self.folders.build = "sdl2-{}".format(self.version)
         else:
             self.ice_layout("cmake")

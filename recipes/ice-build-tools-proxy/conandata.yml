@@ -18,7 +18,7 @@ sources:
   "1.2.0":
     url: "https://github.com/iceshard-engine/ice-build-tools"
     tag: "v1.2.0"
-  "1.2.4": # Versions 1.2.1-1.2.3 are not provided due to known issues
+  "1.2.4":
     url: "https://github.com/iceshard-engine/ice-build-tools"
     tag: "v1.2.4"
   "1.4.0":
@@ -39,3 +39,6 @@ sources:
   "1.9.3":
     url: "https://github.com/iceshard-engine/ice-build-tools"
     tag: "v1.9.3"
+  "1.10.2":
+    url: "https://github.com/iceshard-engine/ice-build-tools"
+    tag: "v1.10.2"
