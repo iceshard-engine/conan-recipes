@@ -2,7 +2,7 @@ sources:
   "1.77":
     url: "https://github.com/ocornut/imgui.git"
     tag: "v1.77"
-  "1.77-docking":
+  "1.77.docking":
     url: "https://github.com/ocornut/imgui.git"
     branch: "docking"
     commit: "a9626e1162c3742307553108aff8a443c20bb73c"
@@ -10,7 +10,7 @@ sources:
   "1.85":
     url: "https://github.com/ocornut/imgui.git"
     tag: "v1.85"
-  "1.85-docking":
+  "1.85.docking":
     url: "https://github.com/ocornut/imgui.git"
     branch: "docking"
     commit: "747f7fdbbaa1fdd46d5115c7333ab0722a7c2afc"
@@ -18,7 +18,7 @@ sources:
   "1.88":
     url: "https://github.com/ocornut/imgui.git"
     tag: "v1.88"
-  "1.88-docking":
+  "1.88.docking":
     url: "https://github.com/ocornut/imgui.git"
     branch: "docking"
     commit: "50c4234acaa21a38ba67fb98fd2f8640a9f282ac"
@@ -26,7 +26,7 @@ sources:
   "1.90":
     url: "https://github.com/ocornut/imgui.git"
     tag: "v1.90"
-  "1.90-docking": # At: Backends: DX12: Changed swapchain scaling mode to DXGI_SCALING_NONE. (Dec 21)
+  "1.90.docking": # At: Backends: DX12: Changed swapchain scaling mode to DXGI_SCALING_NONE. (Dec 21)
     url: "https://github.com/ocornut/imgui.git"
     branch: "docking"
     commit: "20e1caec858caa8123a6d52d410fa3f2578d3054"

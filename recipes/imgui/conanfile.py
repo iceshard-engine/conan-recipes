@@ -27,16 +27,12 @@ class ImGuiConan(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
-    def ice_source_key(self, version):
-        return "{}-docking".format(version, self.channel) if self.channel == "docking" else version
-
     def source(self):
         # Get the selected sources
         self.ice_source()
 
         # Select the file we want to move to the source location
-        type_clists = ".docking" if self.channel == "docking" else ""
-        # file_clists = "CMakeLists{}.txt".format(type_clists)
+        type_clists = ".docking" if "docking" in self.version else ""
 
         src_clists = join(self.export_sources_folder, "CMakeLists{}.txt".format(type_clists))
         dst_clists = join(self.source_folder, "CMakeLists.txt")
