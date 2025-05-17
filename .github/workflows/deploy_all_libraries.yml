@@ -72,6 +72,8 @@ jobs:
         include:
           - library: 'imgui'
             version: '1.90'
+          - library: 'imgui'
+            version: '1.90.docking' # Also build the docking version separately
           - library: 'imguizmo'
             version: '1.91.3'
     with:
