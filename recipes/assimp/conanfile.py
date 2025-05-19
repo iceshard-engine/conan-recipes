@@ -122,7 +122,7 @@ class AssimpConan(ConanFile):
             compiler_ver = "vcUnknown"
             if self.settings.compiler.version == "192":
                 compiler_ver = "vc142"
-            if self.settings.compiler.version == "193":
+            if self.settings.compiler.version == "193" or self.settings.compiler.version == "194":
                 compiler_ver = "vc143"
             self.cpp_info.libs = ["assimp-{}-mt{}".format(compiler_ver, lib_suffix)]
 
