@@ -29,7 +29,7 @@ class TracyConan(ConanFile):
     }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     # ICT Specific fields
@@ -40,6 +40,7 @@ class TracyConan(ConanFile):
         self.version = self.version or self.version_default
 
     def ice_generate_cmake(self, toolchain, deps):
+        super().ice_generate_cmake(toolchain, deps)
         toolchain.variables['TRACY_FIBERS'] = self.options.fibers
         toolchain.variables['TRACY_MANUAL_LIFETIME'] = self.options.manual_lifetime
         toolchain.variables['TRACY_DELAYED_INIT'] = self.options.manual_lifetime
