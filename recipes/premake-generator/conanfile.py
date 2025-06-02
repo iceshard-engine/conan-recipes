@@ -1,7 +1,7 @@
 
 from conan import ConanFile
 from conan.internal import check_duplicated_generator
-from conans.util.files import save
+from conan.tools.files import save
 
 PREMAKE_FILE = "conandeps.lua"
 
@@ -44,7 +44,7 @@ class PremakeDeps(object):
         # Current directory is the generators_folder
         generator_files = self.content
         for generator_file, content in generator_files.items():
-            save(generator_file, content)
+            save(self, generator_file, content)
 
     @property
     def content(self):

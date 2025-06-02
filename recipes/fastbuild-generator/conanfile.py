@@ -1,6 +1,6 @@
 from conan import ConanFile
 from conan.internal import check_duplicated_generator
-from conans.util.files import save
+from conan.tools.files import save
 from os.path import join
 # from posixpath import normpath
 
@@ -29,7 +29,7 @@ class FastBuildDeps(object):
         for generator_file, content in generator_files.items():
             if output_path != None:
                 generator_file = join(output_path, generator_file)
-            save(generator_file, content)
+            save(self, generator_file, content)
 
     def _get_cpp_info(self):
         ret = CppInfo()
