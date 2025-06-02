@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conan.tools.system.package_manager import Apt
 from conan.tools.microsoft import NMakeToolchain
 from conan.tools.files import chdir, replace_in_file
 import os
@@ -20,6 +21,9 @@ class LuaConan(ConanFile):
 
     ice_generator = "none" # "premake5"
     ice_toolchain = "makefile"
+
+    def system_requirements(self):
+        Apt(self).install(["libreadline-dev"], check=True) # Just check and install if necessary
 
     def layout(self):
         self.ice_layout("none")
