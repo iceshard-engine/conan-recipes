@@ -6,6 +6,10 @@ class FmtConan(ConanFile):
     description = "{{fmt}} is an open-source formatting library providing a fast and safe alternative to C stdio and C++ iostreams."
     url = "https://fmt.dev/latest/index.html"
 
+    # Package values
+    user = "iceshard"
+    channel = "stable"
+
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
 
@@ -13,7 +17,7 @@ class FmtConan(ConanFile):
     default_options = { "fPIC":True }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"

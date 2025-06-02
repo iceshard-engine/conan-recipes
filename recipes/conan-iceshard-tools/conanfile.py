@@ -241,7 +241,9 @@ class IceTools(object):
     # Specific generator functions
     ##
     def ice_generate_cmake(self, toolchain, deps):
-        pass
+        toolchain.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
+        toolchain.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
+
     def ice_generate_premake(self, deps):
         pass
     def ice_toolchain_msbuild(self, deps):
@@ -299,7 +301,7 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "1.0.0"
+    version = "1.0.1"
     user = "iceshard"
     channel = "stable"
 
