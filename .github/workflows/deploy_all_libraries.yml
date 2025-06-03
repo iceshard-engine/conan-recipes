@@ -24,7 +24,7 @@ jobs:
           - library: 'catch2'
             version: '3.3.2'
           - library: 'fmt'
-            version: '10.0.0'
+            version: '11.2.0'
           - library: 'tracy'
             version: '0.11.1'
           - library: 'sdl2'
