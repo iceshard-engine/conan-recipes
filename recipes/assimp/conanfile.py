@@ -32,7 +32,7 @@ class AssimpConan(ConanFile):
     exports_sources = ["patches/*"]
     requires = "zlib/1.2.13@iceshard/stable"
 
-    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"

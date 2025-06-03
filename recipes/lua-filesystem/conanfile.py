@@ -19,7 +19,7 @@ class LuaFilesystemConan(ConanFile):
     requires = "lua/5.1.5@iceshard/stable"
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "none"

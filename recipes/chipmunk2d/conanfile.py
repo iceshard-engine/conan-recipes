@@ -13,7 +13,7 @@ class Chipmunk2DConan(ConanFile):
     default_options = { "shared":False, "fPIC":True }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.0@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
