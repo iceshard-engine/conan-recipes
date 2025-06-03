@@ -241,8 +241,9 @@ class IceTools(object):
     # Specific generator functions
     ##
     def ice_generate_cmake(self, toolchain, deps):
-        toolchain.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
-        toolchain.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
+        if self.settings.os == "Linux":
+            toolchain.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
+            toolchain.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
 
     def ice_generate_premake(self, deps):
         pass
