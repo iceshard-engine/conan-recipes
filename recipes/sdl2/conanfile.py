@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.files import get
+from conan.tools.system.package_manager import Apt
 
 class SDL2Conan(ConanFile):
     name = "sdl2"
@@ -21,12 +22,23 @@ class SDL2Conan(ConanFile):
         "fPIC": True
     }
 
+    # Default user and channel values
+    user = "iceshard"
+    channel = "stable"
+
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
     ice_toolchain = "cmake"
+
+    def system_requirements(self):
+        # On linux systems we want to build SDL2 with Wayland support (all required packages)
+        # apt = Apt(self)
+        # We probably just want this as a warning
+        # apt.install(["libegl-dev", "libwayland-dev", "libxkbcommon-dev", "libxext-dev"], check=True)
+        pass
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -73,12 +85,14 @@ class SDL2Conan(ConanFile):
     def ice_package_sources(self):
         self.ice_copy("COPYING.txt", src=self.build_folder, dst="LICENSES") # (? before 2.0.22)
         self.ice_copy("LICENSE.txt", src=self.build_folder, dst="LICENSES") # (starting from 2.0.22)
-        self.ice_copy("*.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
+        self.ice_copy("*.h", src="include", dst="include", keep_path=True)
+        # Copy config files later, because they will replace the default ones.
+        self.ice_copy("SDL_config.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
 
     def ice_package_artifacts(self):
         self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
         self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
-        self.ice_copy("*.so", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.so*", src=".", dst="bin", keep_path=False)
         self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):
