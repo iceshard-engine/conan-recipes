@@ -29,7 +29,7 @@ class TracyConan(ConanFile):
     }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     # ICT Specific fields
@@ -69,7 +69,7 @@ class TracyConan(ConanFile):
 
         # Copies done for Linux and Mac
         self.ice_copy("*.dylib", src=".", dst="bin", keep_path=False)
-        self.ice_copy("*.so", src=".", dst="bin", keep_path=False)
+        self.ice_copy("*.so*", src=".", dst="bin", keep_path=False)
         self.ice_copy("*.a", src=".", dst="lib", keep_path=False)
 
     def package_info(self):

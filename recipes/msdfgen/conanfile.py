@@ -18,11 +18,15 @@ class MsdfGenConanRecipe(ConanFile):
 
     requires = "freetype/2.12.1@iceshard/stable"
 
+    # Package values
+    user = "iceshard"
+    channel = "stable"
+
     # Additional files to export
     exports_sources = ["patches/*", "Findmsdfgen.cmake"]
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
@@ -33,6 +37,7 @@ class MsdfGenConanRecipe(ConanFile):
             del self.options.fPIC
 
     def ice_generate_cmake(self, toolchain, deps):
+        super().ice_generate_cmake(toolchain, deps)
         toolchain.variables['MSDFGEN_BUILD_STANDALONE'] = False
         toolchain.variables['MSDFGEN_INSTALL'] = False
 

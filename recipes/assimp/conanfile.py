@@ -29,10 +29,15 @@ class AssimpConan(ConanFile):
         "strip_symbols": True
     }
 
+    # Default channel and user
+    channel = "stable"
+    user = "iceshard"
+
+    # Others
     exports_sources = ["patches/*"]
     requires = "zlib/1.2.13@iceshard/stable"
 
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
@@ -49,8 +54,7 @@ class AssimpConan(ConanFile):
             del self.options.strip_symbols
 
     def ice_generate_cmake(self, tc, deps):
-        tc.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
-        tc.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
+        super().ice_generate_cmake(tc, deps)
 
         if self.settings.compiler == 'clang':
             tc.variables["CMAKE_CXX_FLAGS_INIT"] = '-Wno-nontrivial-memcall'
@@ -60,6 +64,10 @@ class AssimpConan(ConanFile):
             replace_in_file(self, main_cmake, "ZLIB_FOUND", "zlib_FOUND")
             replace_in_file(self, main_cmake, "ZLIB_INCLUDE_DIR", "zlib_INCLUDE_DIR")
 
+            code_cmake = os.path.join(self.source_folder, "code", "CMakeLists.txt")
+            replace_in_file(self, code_cmake, "ZLIB_LIBRARIES", "zlib_LIBRARIES")
+
+        if self.settings.os == "Linux":
             code_cmake = os.path.join(self.source_folder, "code", "CMakeLists.txt")
             replace_in_file(self, code_cmake, "ZLIB_LIBRARIES", "zlib_LIBRARIES")
 
@@ -107,7 +115,7 @@ class AssimpConan(ConanFile):
     def ice_package_artifacts(self):
         self.ice_copy("*.dll", dst="bin", src="bin", keep_path=False)
         self.ice_copy("*.lib", dst="lib", src="lib", keep_path=False)
-        self.ice_copy("*.so", dst="bin", src="bin", keep_path=False)
+        self.ice_copy("*.so*", dst="bin", src="bin", keep_path=False)
         self.ice_copy("*.a", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):

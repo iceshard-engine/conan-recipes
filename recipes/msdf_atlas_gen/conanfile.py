@@ -18,11 +18,15 @@ class MsdfAtlasGenConanRecipe(ConanFile):
 
     requires = "msdfgen/1.9.2@iceshard/stable"
 
+    # Package values
+    user = "iceshard"
+    channel = "stable"
+
     # Additional files to export
     exports_sources = ["patches/*"]
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
