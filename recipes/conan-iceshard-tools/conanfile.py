@@ -1,4 +1,5 @@
-# from enum import Enum
+import types
+
 from conan import ConanFile
 from conan import tools
 from conan.tools.scm import Git
@@ -9,8 +10,7 @@ from conan.tools.microsoft import MSBuildToolchain, MSBuild, msvs_toolset
 from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
 from os.path import join
 
-import os
-import types
+from ice.tools.files import _ice_copy
 
 class IceProperties(object):
     def __init__(self):
@@ -84,8 +84,8 @@ class IceTools(object):
 
         # Calls 'ice_package_artifacts' with a specialized copy method
         if chdir(self, self.build_folder):
-            def CopyFromBuild(self, pattern, src, dst, excludes=None, keep_path=False):
-                copy(self, pattern, src=join(self.build_folder, src), dst=join(self.package_folder, dst), excludes=excludes, keep_path=keep_path)
+            def CopyFromBuild(self, pattern, src, dst, excludes=None, keep_path=False, resolve_symlinks=False):
+                _ice_copy(self, pattern, src=join(self.build_folder, src), dst=join(self.package_folder, dst), excludes=excludes, keep_path=keep_path, resolve_symlinks=resolve_symlinks)
             self.ice_copy = types.MethodType(CopyFromBuild, self)
             self.ice_package_artifacts()
             del self.ice_copy
@@ -302,10 +302,16 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "1.0.1"
+    version = "1.0.2"
     user = "iceshard"
     channel = "stable"
 
     # Since we need to have access to this generator we will always require on it.
     # This might not be the best approach but it works for now
     python_requires = "fastbuild-generator/[>=0.4.2 <1.0]@iceshard/stable"
+
+    # Additional files to export
+    exports = ["ice/*"]
+
+    # def export(self):
+    #     copy(self, "ice/*", self.recipe_folder, self.export_folder)
