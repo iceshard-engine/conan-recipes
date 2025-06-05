@@ -29,8 +29,6 @@ class Catch2Conan(ConanFile):
     def ice_generate_cmake(self, toolchain, deps):
         super().ice_generate_cmake(toolchain, deps)
 
-        toolchain.blocks['cppstd'].values = { 'cppstd': '20', 'cppstd_extensions': 'ON' }
-
     def ice_build(self):
         self.ice_run_cmake()
 
