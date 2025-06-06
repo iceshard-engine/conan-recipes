@@ -27,7 +27,7 @@ class RapidJSONConanRecipe(ConanFile):
 
     def ice_package_sources(self):
         self.ice_copy("license.txt", src=".", dst="LICENSES")
-        self.ice_copy("*.hpp", src=".", dst="include/rapidxml_ns", excludes=("tests/*", "doc/*"))
+        self.ice_copy("*.h", src="include", dst="include", keep_path=True)
 
     def package_info(self):
         self.cpp_info.includedirs = [ "include" ]
