@@ -1,0 +1,15 @@
+sources:
+  "1.1.0":
+    url: "https://github.com/Tencent/rapidjson.git"
+    tag: "v1.1.0"
+  "1.1.0.patched":
+    url: "https://github.com/Tencent/rapidjson.git"
+    branch: "master"
+    commit: "24b5e7a8b27f42fa16b96fc70aade9106cf7102f"
+  # Unofficial tags provided by a fork from @jcelerie
+  "1.2.0.unofficial":
+    url: "https://github.com/jcelerier/rapidjson.git"
+    tag: "v1.2.0"
+  "1.2.1.unofficial":
+    url: "https://github.com/jcelerier/rapidjson.git"
+    tag: "v1.2.1"

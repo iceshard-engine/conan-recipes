@@ -98,6 +98,8 @@ jobs:
             version: '3.0.5'
           - library: 'rapidxml_ns'
             version: '1.13.2'
+          - library: 'rapidjson'
+            version: '1.1.0.patched'
     uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ matrix.library }}
