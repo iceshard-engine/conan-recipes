@@ -242,8 +242,12 @@ class IceTools(object):
     ##
     def ice_generate_cmake(self, toolchain, deps):
         if self.settings.os == "Linux":
-            toolchain.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
-            toolchain.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
+            if self.settings.compiler == 'clang':
+                toolchain.variables["CMAKE_C_COMPILER"] = "{}-{}".format(self.settings.compiler, self.settings.compiler.version)
+                toolchain.variables["CMAKE_CXX_COMPILER"] = "{}++-{}".format(self.settings.compiler, self.settings.compiler.version)
+            else:
+                toolchain.variables["CMAKE_C_COMPILER"] = str(self.settings.compiler)
+                toolchain.variables["CMAKE_CXX_COMPILER"] = str(self.settings.compiler)
 
     def ice_generate_premake(self, deps):
         pass
