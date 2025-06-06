@@ -37,7 +37,7 @@ class SDL2Conan(ConanFile):
         # On linux systems we want to build SDL2 with Wayland support (all required packages)
         # apt = Apt(self)
         # We probably just want this as a warning
-        # apt.install(["libegl-dev", "libwayland-dev", "libxkbcommon-dev", "libxext-dev"], check=True)
+        # apt.install(["pkgconf", "libegl-dev", "libwayland-dev", "libxkbcommon-dev", "libxext-dev"], check=True)
         pass
 
     def config_options(self):
