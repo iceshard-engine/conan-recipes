@@ -37,7 +37,7 @@ class FmtConan(ConanFile):
         self.ice_run_cmake(variables=variables)
 
     def ice_package_sources(self):
-        self.ice_copy("LICENSE.rst", src=".", dst="LICENSES")
+        self.ice_copy("LICENSE*", src=".", dst="LICENSES")
         self.ice_copy("*.h", src="include", dst="include", keep_path=True)
 
     def ice_package_artifacts(self):
