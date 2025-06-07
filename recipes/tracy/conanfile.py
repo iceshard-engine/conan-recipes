@@ -47,10 +47,6 @@ class TracyConan(ConanFile):
         toolchain.variables['TRACY_NO_SYSTEM_TRACING'] = self.options.no_system_tracing
         toolchain.variables['TRACY_NO_SAMPLING'] = self.options.no_sampling
 
-        # # For EmScripten we build with -pthread support and shared memory
-        # if self.settings.os == "Emscripten":
-        #     toolchain.extra_cxxflags = ['-pthread', '-sSHARED_MEMORY=1']
-
     def ice_build(self):
         self.ice_run_cmake()
 

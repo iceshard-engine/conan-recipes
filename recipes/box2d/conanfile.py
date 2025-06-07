@@ -1,4 +1,6 @@
 from conan import ConanFile
+from conan.tools.files import replace_in_file
+import os
 
 class Box2DConan(ConanFile):
     name = "box2d"
@@ -18,7 +20,7 @@ class Box2DConan(ConanFile):
     default_options = { "shared":False, "fPIC":True, "profiled":False, "validated":False }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "cmake"
@@ -30,6 +32,14 @@ class Box2DConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
+
+    def ice_generate_cmake(self, tc, deps):
+        super().ice_generate_cmake(tc, deps)
+
+        # For Emscripten we need to ensure we are compiled with -pthread and -sSHARED_MEMORY support
+        if self.settings.os == "Emscripten":
+            main_cmake = os.path.join(self.source_folder, "src", "CMakeLists.txt")
+            replace_in_file(self, main_cmake, "-msimd128 -msse2", "-msimd128 -msse2 -pthread -sSHARED_MEMORY=1")
 
     def ice_build(self):
         variables = { }
