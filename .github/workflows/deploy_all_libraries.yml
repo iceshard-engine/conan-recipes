@@ -31,6 +31,8 @@ jobs:
             version: '2.0.22'
           - library: 'box2d'
             version: '3.0.0'
+          - library: 'rccpp'
+            version: '0.1.0'
     uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ matrix.library }}

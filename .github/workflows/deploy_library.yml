@@ -21,6 +21,7 @@ on:
         - 'msdfgen'
         - 'msdf_atlas_gen'
         - 'rapidxml_ns'
+        - 'rccpp'
         - 'sdl2'
         - 'tracy'
         - 'zlib'
