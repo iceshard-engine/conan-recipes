@@ -1,0 +1,11 @@
+sources:
+  "0.1.0":
+    url: "https://github.com/Dandielo/RuntimeCompiledCPlusPlus.git"
+    branch: "development"
+    sha1: "b7523b32d7ced8743f63cf365cfa4583fd927cf1"
+patches:
+  "0.1.0":
+  - patch_file: patches/windows_patch.patch
+    patch_description: 'Small fixes that fail compilation with C++20 on latest compilers.'
+  - patch_file: patches/cmake.patch
+    patch_description: 'Enable C++20 in CMake script.'

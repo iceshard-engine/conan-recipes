@@ -1,0 +1,27 @@
+diff --git a/Aurora/CMakeLists.txt b/Aurora/CMakeLists.txt
+index e058424f..cbae4466 100644
+--- a/Aurora/CMakeLists.txt
++++ b/Aurora/CMakeLists.txt
+@@ -24,7 +24,6 @@ option(GLFW_SYSTEM    "Use the operating system glfw library" OFF)
+ if(UNIX AND NOT APPLE)
+ 	set(BUILD_TYPE SHARED)
+ else()
+-	set(BUILD_TYPE STATIC)
+ 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+@@ -48,9 +48,12 @@ endif()
+ 
+ if(MSVC)
+ 	# ensure the files are compiled with full paths and utf-8 so that __FILE__ macros are in utf-8 encoding
+-	set_target_properties(RuntimeCompiler RuntimeObjectSystem PROPERTIES COMPILE_FLAGS "/FC /utf-8")
++	set_target_properties(RuntimeCompiler RuntimeObjectSystem PROPERTIES COMPILE_FLAGS "/FC /utf-8")
+ endif()
+ 
++set_property(TARGET RuntimeCompiler PROPERTY CXX_STANDARD 20)
++set_property(TARGET RuntimeObjectSystem PROPERTY CXX_STANDARD 20)
++
+ #
+ # Make Install
+ #
+ 
