@@ -9,7 +9,7 @@ class ImGuizmoConan(ConanFile):
     url = "https://github.com/CedricGuillemet/ImGuizmo"
 
     # Default values for version, user and channel
-    version_default = "1.91.3"
+    version_default = "1.91.5"
     user = "iceshard"
     channel = "stable"
 

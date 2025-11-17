@@ -3,10 +3,19 @@ sources:
     url: "https://github.com/CedricGuillemet/ImGuizmo.git"
     branch: "master"
     commit: "b10e91756d32395f5c1fefd417899b657ed7cb88"
+  "1.91.5":
+    url: "https://github.com/CedricGuillemet/ImGuizmo.git"
+    branch: "master"
+    commit: "71f14292205c3317122b39627ed98efce137086a"
 
 patches:
   "1.91.3":
     - patch_file: patches/imgui_include_paths.patch
       patch_description: Updates the ImGuizmo.cpp to use includes compatible with packages created under 'iceshard' user.
-    - patch_file: patches/imguizmo_dllsupport.patch
+    - patch_file: patches/imguizmo_dllsupport_1913.patch
+      patch_description: Updates the ImGuizmo.cpp/h files to enable setting the context across DLL boundaries.
+  "1.91.5":
+    - patch_file: patches/imgui_include_paths.patch
+      patch_description: Updates the ImGuizmo.cpp to use includes compatible with packages created under 'iceshard' user.
+    - patch_file: patches/imguizmo_dllsupport_1915.patch
       patch_description: Updates the ImGuizmo.cpp/h files to enable setting the context across DLL boundaries.

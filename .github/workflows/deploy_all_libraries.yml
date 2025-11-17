@@ -73,11 +73,11 @@ jobs:
       matrix:
         include:
           - library: 'imgui'
-            version: '1.90'
+            version: '1.92.4'
           - library: 'imgui'
-            version: '1.90.docking' # Also build the docking version separately
+            version: '1.92.4.docking' # Also build the docking version separately
           - library: 'imguizmo'
-            version: '1.91.3'
+            version: '1.91.5'
     with:
       library: ${{ matrix.library }}
       version: ${{ matrix.version }}

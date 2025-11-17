@@ -30,3 +30,38 @@ sources:
     url: "https://github.com/ocornut/imgui.git"
     branch: "docking"
     commit: "20e1caec858caa8123a6d52d410fa3f2578d3054"
+
+  "1.91.1":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.91.1"
+  "1.91.1.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.91.1-docking"
+
+  "1.92.1":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.1"
+  "1.92.1.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.1-docking"
+
+  "1.92.2":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.2b"
+  "1.92.2.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.2b-docking"
+
+  "1.92.3":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.3"
+  "1.92.3.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.3-docking"
+
+  "1.92.4":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.4"
+  "1.92.4.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.4-docking"
