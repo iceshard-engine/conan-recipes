@@ -80,7 +80,7 @@ jobs:
         conan-config-url: https://github.com/iceshard-engine/conan-config.git
         conan-profile: 'linux_x64_clang20'
 
-    - name: Setup Clang-${{ steps.conan2.outputs.conan-profile-compiler-version == 'clang' }}
+    - name: Setup Clang-${{ steps.conan2.outputs.conan-profile-compiler-version }}
       if: ${{ steps.conan2.outputs.conan-profile-compiler == 'clang' }}
       run: |
         wget https://apt.llvm.org/llvm.sh
