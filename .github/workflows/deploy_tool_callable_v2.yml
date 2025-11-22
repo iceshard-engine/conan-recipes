@@ -55,7 +55,7 @@ jobs:
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:host windows_x64_msvc194
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all windows_x64_msvc194
 
     - name: Upload Package
       shell: pwsh
