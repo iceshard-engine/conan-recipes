@@ -48,14 +48,14 @@ jobs:
       uses: iceshard-engine/.github/.github/actions/conan2@main
       with:
         conan-cache: true
-        conan-cache-version: 'v1-${{ inputs.platform }}'
+        conan-cache-version: 'v1-windows'
         conan-config-url: https://github.com/iceshard-engine/conan-config.git
-        conan-profile: '${{ inputs.platform }}_x64_msvc194'
+        conan-profile: 'windows_x64_msvc194'
 
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:host ${{ inputs.platform }}_x64_msvc194
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:host windows_x64_msvc194
 
     - name: Upload Package
       shell: pwsh
@@ -76,9 +76,9 @@ jobs:
       uses: iceshard-engine/.github/.github/actions/conan2@main
       with:
         conan-cache: true
-        conan-cache-version: 'v1-${{ inputs.platform }}'
+        conan-cache-version: 'v1-linux'
         conan-config-url: https://github.com/iceshard-engine/conan-config.git
-        conan-profile: '${{ inputs.platform }}_x64_clang20'
+        conan-profile: 'linux_x64_clang20'
 
     - name: Setup Clang-${{ steps.conan2.outputs.conan-profile-compiler-version == 'clang' }}
       if: ${{ steps.conan2.outputs.conan-profile-compiler == 'clang' }}
@@ -91,7 +91,7 @@ jobs:
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all ${{ inputs.platform }}_x64_clang20
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all linux_x64_clang20
 
     - name: Upload Package
       shell: pwsh
