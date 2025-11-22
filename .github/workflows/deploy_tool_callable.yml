@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       version:
-        description: 'The library version to be deployed.'
+        description: 'The tool version to be deployed.'
         required: true
         type: string
       channel:
@@ -22,11 +22,6 @@ on:
         required: false
         type: string
         default: 'all'
-      conan_options:
-        description: 'Additional options to be passed to the conan call.'
-        required: false
-        type: string
-        default: ''
       conan_deploy_package:
         description: 'The package to be deployed from the workflow. May be different that the package to be build.'
         required: false
@@ -40,37 +35,66 @@ on:
 
 
 jobs:
-  deploy-windows-release:
-    name: 'Deploy ${{ inputs.tool }} (Windows)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
+  deploy-package-windows:
+    name: Deploy ${{ inputs.tool }} (Windows)
     if: ${{ inputs.platform == 'windows' || inputs.platform == 'all' }}
-    with:
-      host: windows-latest
-      conan_package_recipe: 'recipes/${{ inputs.tool }}'
-      conan_package_version: '${{ inputs.version }}'
-      conan_package_user: 'iceshard'
-      conan_package_channel: '${{ inputs.channel }}'
-      conan_package_deploy: ${{ inputs.conan_deploy_package || inputs.tool }}
-      conan_upstream_remote: 'conan2-iceshard'
-      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
-      conan_options: '-s"build_type=Release" ${{ inputs.conan_options }}'
-      conan_upload_options: ''
-    secrets: inherit
+    runs-on: windows-latest
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
 
-  deploy-linux-release:
-    name: 'Deploy ${{ inputs.tool }} (Linux)'
-    uses: iceshard-engine/.github/.github/workflows/rw_conan2_deploy_package.yaml@main
+    - name: Setup Conan2
+      id: conan2
+      uses: iceshard-engine/.github/.github/actions/conan2@main
+      with:
+        conan-cache: true
+        conan-cache-version: 'v1-windows'
+        conan-config-url: https://github.com/iceshard-engine/conan-config.git
+        conan-profile: 'windows_x64_msvc194'
+
+    - name: Create Package
+      shell: pwsh
+      run: |
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all windows_x64_msvc194
+
+    - name: Upload Package
+      shell: pwsh
+      run: |
+        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
+        conan upload -r conan2-iceshard  ${{ inputs.conan_deploy_package || inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
+
+  deploy-package-linux:
+    name: Deploy ${{ inputs.tool }} (Linux)
     if: ${{ inputs.platform == 'linux' || inputs.platform == 'all' }}
-    with:
-      host: ubuntu-22.04
-      conan_package_recipe: 'recipes/${{ inputs.tool }}'
-      conan_package_version: '${{ inputs.version }}'
-      conan_package_user: 'iceshard'
-      conan_package_channel: '${{ inputs.channel }}'
-      conan_package_deploy: ${{ inputs.conan_deploy_package || inputs.tool }}
-      conan_upstream_remote: 'conan2-iceshard'
-      conan_config_url: 'https://github.com/iceshard-engine/conan-config.git'
-      conan_options: '-s"build_type=Release" --build ${{ inputs.tool }}/* ${{ inputs.conan_options }}'
-      conan_profile: 'default'
-      conan_upload_options: ''
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup Conan2
+      id: conan2
+      uses: iceshard-engine/.github/.github/actions/conan2@main
+      with:
+        conan-cache: true
+        conan-cache-version: 'v1-linux'
+        conan-config-url: https://github.com/iceshard-engine/conan-config.git
+        conan-profile: 'linux_x64_clang20'
+
+    - name: Setup Clang-${{ steps.conan2.outputs.conan-profile-compiler-version }}
+      if: ${{ steps.conan2.outputs.conan-profile-compiler == 'clang' }}
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh ${{ steps.conan2.outputs.conan-profile-compiler-version }}
+        sudo apt install libc++-${{ steps.conan2.outputs.conan-profile-compiler-version }}-dev libc++abi-${{ steps.conan2.outputs.conan-profile-compiler-version }}-dev
+
+    - name: Create Package
+      shell: pwsh
+      run: |
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all linux_x64_clang20
+
+    - name: Upload Package
+      shell: pwsh
+      run: |
+        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
+        conan upload -r conan2-iceshard  ${{ inputs.conan_deploy_package || inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
