@@ -91,7 +91,7 @@ jobs:
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:host ${{ inputs.platform }}_x64_clang20
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all ${{ inputs.platform }}_x64_clang20
 
     - name: Upload Package
       shell: pwsh
