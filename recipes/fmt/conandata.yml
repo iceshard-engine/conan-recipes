@@ -17,3 +17,6 @@ sources:
   "11.2.0":
     url: "https://github.com/fmtlib/fmt.git"
     tag: "11.2.0"
+  "12.1.0":
+    url: "https://github.com/fmtlib/fmt.git"
+    tag: "12.1.0"

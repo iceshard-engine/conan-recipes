@@ -21,18 +21,18 @@ jobs:
       # max-parallel: 1
       matrix:
         include:
+          - library: 'box2d'
+            version: '3.0.0'
           - library: 'catch2'
             version: '3.3.2'
           - library: 'fmt'
             version: '11.2.0'
           - library: 'tracy'
             version: '0.11.1'
-          - library: 'sdl2'
-            version: '2.0.22'
-          - library: 'box2d'
-            version: '3.0.0'
           - library: 'rccpp'
             version: '0.1.0'
+          - library: 'sdl2'
+            version: '2.0.22'
     uses: ./.github/workflows/deploy_library_callable.yml
     with:
       library: ${{ matrix.library }}

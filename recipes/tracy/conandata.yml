@@ -17,3 +17,9 @@ sources:
   "0.11.1":
     url: "https://github.com/wolfpld/tracy.git"
     tag: "v0.11.1"
+  "0.12.2":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.12.2"
+  "0.13.0":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.13.0"

@@ -7,3 +7,8 @@ sources:
     url: "https://www.libsdl.org/release/SDL2-2.0.14.tar.gz"
   "2.0.22":
     url: "https://www.libsdl.org/release/SDL2-2.0.22.tar.gz"
+  # Updated versioning
+  "2.24.2":
+    url: "https://www.libsdl.org/release/SDL2-2.24.2.tar.gz"
+  "2.32.10":
+    url: "https://www.libsdl.org/release/SDL2-2.32.10.tar.gz"

@@ -10,16 +10,21 @@ on:
         type: choice
         options:
         - 'assimp'
+        - 'box2d'
         - 'catch2'
         - 'chipmunk2d'
+        - 'cli11'
         - 'fmt'
         - 'freetype'
         - 'imgui'
+        - 'imguizmo'
         - 'lua'
         - 'lua-filesystem'
         - 'lua-lpeg'
-        - 'msdfgen'
         - 'msdf_atlas_gen'
+        - 'msdfgen'
+        - 'rapidfuzz_cpp'
+        - 'rapidjson'
         - 'rapidxml_ns'
         - 'rccpp'
         - 'sdl2'
@@ -47,18 +52,6 @@ on:
         - all
         - windows
         - linux
-      conan_profile:
-        description: 'The conan profile to be used when building the package.'
-        required: false
-        type: choice
-        options:
-        - 'gcc-12.0-linux-x86_64'
-        - 'gcc-11.0-linux-x86_64'
-      conan_options:
-        description: 'Additional options to be passed to the conan call.'
-        required: false
-        type: string
-        default: ''
 
 
 jobs:

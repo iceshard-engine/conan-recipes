@@ -2,3 +2,9 @@ sources:
   "2.12.1":
     url: "https://github.com/freetype/freetype.git"
     tag: "VER-2-12-1"
+  "2.13.3":
+    url: "https://github.com/freetype/freetype.git"
+    tag: "VER-2-13-3"
+  "2.14.1":
+    url: "https://github.com/freetype/freetype.git"
+    tag: "VER-2-14-1"
