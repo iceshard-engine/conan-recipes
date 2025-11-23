@@ -50,6 +50,11 @@ jobs:
         conan-config-url: https://github.com/iceshard-engine/conan-config.git
         conan-profile: ${{ env.CONAN_PROFILE }}
 
+    - name: Login to Repository
+      shell: pwsh
+      run: |
+        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
+
     - name: Create Package
       shell: pwsh
       run: |
@@ -58,7 +63,6 @@ jobs:
     - name: Upload Package
       shell: pwsh
       run: |
-        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
         conan upload -r conan2-iceshard  ${{ inputs.library }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
   deploy-package-linux:
@@ -91,6 +95,11 @@ jobs:
         sudo ./llvm.sh ${{ steps.conan2.outputs.conan-profile-compiler-version }}
         sudo apt install libc++-${{ steps.conan2.outputs.conan-profile-compiler-version }}-dev libc++abi-${{ steps.conan2.outputs.conan-profile-compiler-version }}-dev
 
+    - name: Login to Repository
+      shell: pwsh
+      run: |
+        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
+
     - name: Create Package
       shell: pwsh
       run: |
@@ -99,5 +108,4 @@ jobs:
     - name: Upload Package
       shell: pwsh
       run: |
-        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
         conan upload -r conan2-iceshard  ${{ inputs.library }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
