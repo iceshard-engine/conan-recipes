@@ -70,8 +70,6 @@ jobs:
       version: ${{ inputs.version }}
       channel: ${{ inputs.channel }}
       platform: ${{ inputs.platform }}
-      conan_options: ${{ inputs.conan_options }}
-      conan_profile: ${{ inputs.conan_profile }}
     secrets:
       conan_user: 'iceshard'
       conan_password: ${{ secrets.CONAN_PASSWORD }}
