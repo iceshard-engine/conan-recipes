@@ -55,7 +55,7 @@ jobs:
     - name: Login to Repository
       shell: pwsh
       run: |
-        conan user -p ${{ secrets.conan_token }} -r conan2-iceshard ${{ secrets.conan_user }}
+        conan remote login -p ${{ secrets.conan_token }} conan2-iceshard ${{ secrets.conan_user }}
         
     - name: Create Package
       shell: pwsh
@@ -95,7 +95,7 @@ jobs:
     - name: Login to Repository
       shell: pwsh
       run: |
-        conan user -p ${{ secrets.conan_token }} -r conan2-iceshard ${{ secrets.conan_user }}
+        conan remote login -p ${{ secrets.conan_token }} conan2-iceshard ${{ secrets.conan_user }}
         
     - name: Create Package
       shell: pwsh
