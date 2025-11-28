@@ -57,4 +57,4 @@ jobs:
       conan_deploy_package: ${{ inputs.conan_deploy_package }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
