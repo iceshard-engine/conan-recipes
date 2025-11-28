@@ -103,7 +103,7 @@ jobs:
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.library }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all ${{ env.CONAN_PROFILE }} -s"build_type=${{ matrix.config }}"
+        conan create ./recipes/${{ inputs.library }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all ${{ env.CONAN_PROFILE }} -s"build_type=${{ matrix.config }}" -c tools.system.package_manager:mode=install
 
     - name: Upload Package
       shell: pwsh

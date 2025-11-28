@@ -65,4 +65,4 @@ jobs:
       platform: ${{ inputs.platform }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
