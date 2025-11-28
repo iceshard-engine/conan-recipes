@@ -30,7 +30,7 @@ on:
     secrets:
       conan_user:
         required: true
-      conan_password:
+      conan_token:
         required: true
 
 
