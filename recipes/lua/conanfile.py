@@ -16,14 +16,14 @@ class LuaConan(ConanFile):
     default_options = { "shared":True }
 
     # Iceshard conan tools
-    python_requires = "conan-iceshard-tools/1.0.1@iceshard/stable"
+    python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
 
     ice_generator = "none" # "premake5"
     ice_toolchain = "makefile"
 
-    def system_requirements(self):
-        Apt(self).install(["libreadline-dev"], check=True) # Just check and install if necessary
+    # def system_requirements(self):
+    #     Apt(self).install(["libreadline-dev"], check=True) # Just check and install if necessary
 
     def layout(self):
         self.ice_layout("none")

@@ -1,3 +1,7 @@
 sources:
   "5.1.5":
     url: "https://www.lua.org/ftp/lua-5.1.5.tar.gz"
+patches:
+  "5.1.5":
+    - patch_file: "patches/expand_makefile_targets_515.patch"
+      patch_description: "Adds a new 'linux' target and renamed the old one 'linux-readline'."
