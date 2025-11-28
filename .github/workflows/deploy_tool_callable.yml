@@ -57,10 +57,14 @@ jobs:
       run: |
         conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all windows_x64_msvc194
 
+    - name: Login to Repository
+      shell: pwsh
+      run: |
+        conan user -p ${{ secrets.conan_token }} -r conan2-iceshard ${{ secrets.conan_user }}
+
     - name: Upload Package
       shell: pwsh
       run: |
-        conan remote login conan2-iceshard ${{ secrets.conan_user }} -p ${{ secrets.conan_password }}
         conan upload -r conan2-iceshard  ${{ inputs.conan_deploy_package || inputs.tool }}/${{ inputs.version }}@iceshard/${{ inputs.channel }}
 
   deploy-package-linux:
