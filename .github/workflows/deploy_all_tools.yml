@@ -43,7 +43,7 @@ jobs:
     uses: ./.github/workflows/deploy_tool_callable.yml
     with:
       tool: 'conan-iceshard-tools'
-      version: '1.0.1'
+      version: '1.0.2'
       channel: stable
       platform: ${{ inputs.platform }}
     secrets:
