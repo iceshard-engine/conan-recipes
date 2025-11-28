@@ -35,7 +35,7 @@ jobs:
       platform: ${{ inputs.platform }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
 
   deploy-conan-iceshard-tools:
     name: Deploy Tool (conan-iceshard-tools, 1.0.1)
@@ -48,7 +48,7 @@ jobs:
       platform: ${{ inputs.platform }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
 
   deploy-tools-dependencies:
     name: Deploy Tools Dependencies
@@ -71,7 +71,7 @@ jobs:
       platform: ${{ inputs.platform }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
 
   deploy-tools:
     name: Deploy Tool
@@ -94,4 +94,4 @@ jobs:
       conan_deploy_package: ${{ matrix.package }}
     secrets:
       conan_user: 'iceshard'
-      conan_password: ${{ secrets.CONAN_PASSWORD }}
+      conan_token: ${{ secrets.CONAN_TOKEN }}
