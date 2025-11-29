@@ -15,6 +15,9 @@ class LuaConan(ConanFile):
     options = { "shared": [True, False] }
     default_options = { "shared":True }
 
+    # Additional files to export
+    exports_sources = ["patches/*"]
+
     # Iceshard conan tools
     python_requires = "conan-iceshard-tools/1.0.2@iceshard/stable"
     python_requires_extend = "conan-iceshard-tools.IceTools"
