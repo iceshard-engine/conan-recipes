@@ -3,5 +3,5 @@ sources:
     url: "https://www.lua.org/ftp/lua-5.1.5.tar.gz"
 patches:
   "5.1.5":
-    - patch_file: "patches/expand_makefile_targets_515.patch"
-      patch_description: "Adds a new 'linux' target and renamed the old one 'linux-readline'."
+    - patch_file: "patches/remove_readline_dependency_515.patch"
+      patch_description: "Removes the dependency on a linux only package 'readline'."

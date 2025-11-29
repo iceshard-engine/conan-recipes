@@ -1,0 +1,33 @@
+diff --git a/lua-5.1.5/src/Makefile b/lua-5.1.5/src/Makefile
+index e0d4c9f..2c5b122 100644
+--- a/lua-5.1.5/src/Makefile
++++ b/lua-5.1.5/src/Makefile
+@@ -96,6 +96,9 @@ generic:
+ 	$(MAKE) all MYCFLAGS=
+ 
+ linux:
++	$(MAKE) all MYCFLAGS=-DLUA_USE_LINUX MYLIBS="-Wl,-E -ldl -lhistory -lncurses"
++
++linux-readline:
+ 	$(MAKE) all MYCFLAGS=-DLUA_USE_LINUX MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses"
+ 
+ macosx:
+ 
+diff --git a/lua-5.1.5/src/luaconf.h b/lua-5.1.5/src/luaconf.h
+index e2cb261..f06b7c3 100644
+--- a/lua-5.1.5/src/luaconf.h
++++ b/lua-5.1.5/src/luaconf.h
+@@ -36,7 +36,7 @@
+ #if defined(LUA_USE_LINUX)
+ #define LUA_USE_POSIX
+ #define LUA_USE_DLOPEN		/* needs an extra library: -ldl */
+-#define LUA_USE_READLINE	/* needs some extra libraries */
++// #define LUA_USE_READLINE	/* needs some extra libraries */
+ #endif
+ 
+ #if defined(LUA_USE_MACOSX)
+@@ -760,4 +760,3 @@ union luai_Cast { double l_d; long l_l; };
+ 
+ 
+ #endif
+ 
