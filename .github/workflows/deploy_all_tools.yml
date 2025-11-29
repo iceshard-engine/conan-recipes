@@ -92,6 +92,7 @@ jobs:
       channel: stable
       platform: ${{ inputs.platform }}
       conan_deploy_package: ${{ matrix.package }}
+      is_proxy_recipe: ${{ contains(matrix.tool, '-proxy') }}
     secrets:
       conan_user: 'iceshard'
       conan_token: ${{ secrets.CONAN_TOKEN }}
