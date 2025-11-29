@@ -1,7 +1,7 @@
-diff --git a/src/Makefile b/src/Makefile
+diff --git a/lua-5.1.5/src/Makefile b/lua-5.1.5/src/Makefile
 index e0d4c9f..2c5b122 100644
---- a/src/Makefile
-+++ b/src/Makefile
+--- a/lua-5.1.5/src/Makefile
++++ b/lua-5.1.5/src/Makefile
 @@ -96,6 +96,9 @@ generic:
  	$(MAKE) all MYCFLAGS=
  
