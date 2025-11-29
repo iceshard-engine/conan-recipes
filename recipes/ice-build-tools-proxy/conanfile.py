@@ -10,6 +10,13 @@ class IceBuildToolsProxyConan(ConanFile):
     description = "Build tools created for the IceShard project that don't come with tailored features."
     url = "https://github.com/iceshard-engine/ice-build-tools"
 
+    options = {
+        "profile": ["ANY"]
+    }
+    default_options = {
+        "profile": "default"
+    }
+
     def layout(self):
         basic_layout(self)
 
@@ -31,4 +38,4 @@ class IceBuildToolsProxyConan(ConanFile):
             git.checkout(source_info["tag"])
 
     def build(self):
-        self.run("conan create . --version {} --user {} --channel {}".format(self.version, self.user, self.channel))
+        self.run("conan create . --version {} --user {} --channel {} --profile:all {}".format(self.version, self.user, self.channel, self.options.profile))

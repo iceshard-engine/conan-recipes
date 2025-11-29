@@ -27,6 +27,11 @@ on:
         required: false
         type: string
         default: ''
+      is_proxy_recipe:
+        description: 'The recipe created is a proxy to a different recipe from a different repository.'
+        required: false
+        type: boolean
+        default: false
     secrets:
       conan_user:
         required: true
@@ -51,16 +56,23 @@ jobs:
         conan-cache-version: 'v1-windows'
         conan-config-url: https://github.com/iceshard-engine/conan-config.git
         conan-profile: 'windows_x64_msvc194'
-        
+
     - name: Login to Repository
       shell: pwsh
       run: |
         conan remote login -p ${{ secrets.conan_token }} conan2-iceshard ${{ secrets.conan_user }}
-        
+
+    - name: Setup proxy options
+      id: proxy-options
+      if: ${{ inputs.is_proxy_recipe }}
+      shell: pwsh
+      run: |
+        echo 'options=-o"&:profile=windows_x64_msvc194"' >> $env:GITHUB_OUTPUT
+
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all windows_x64_msvc194
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all windows_x64_msvc194 ${{ steps.proxy-options.outputs.options }}
 
     - name: Upload Package
       shell: pwsh
@@ -96,11 +108,18 @@ jobs:
       shell: pwsh
       run: |
         conan remote login -p ${{ secrets.conan_token }} conan2-iceshard ${{ secrets.conan_user }}
-        
+
+    - name: Setup proxy options
+      id: proxy-options
+      if: ${{ inputs.is_proxy_recipe }}
+      shell: pwsh
+      run: |
+        echo 'options=-o"&:profile=linux_x64_clang20"' >> $env:GITHUB_OUTPUT
+
     - name: Create Package
       shell: pwsh
       run: |
-        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all linux_x64_clang20
+        conan create ./recipes/${{ inputs.tool }} --version ${{ inputs.version }} --user iceshard --channel ${{ inputs.channel }} --profile:all linux_x64_clang20 ${{ steps.proxy-options.outputs.options }}
 
     - name: Upload Package
       shell: pwsh
