@@ -26,8 +26,4 @@ index e2cb261..f06b7c3 100644
  #endif
  
  #if defined(LUA_USE_MACOSX)
-@@ -760,4 +760,3 @@ union luai_Cast { double l_d; long l_l; };
- 
- 
- #endif
  
