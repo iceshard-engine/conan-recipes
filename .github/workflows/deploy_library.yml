@@ -64,5 +64,5 @@ jobs:
       channel: ${{ inputs.channel }}
       platform: ${{ inputs.platform }}
     secrets:
-      conan_user: 'iceshard'
+      conan_user: ${{ secrets.CONAN_USER }}
       conan_token: ${{ secrets.CONAN_TOKEN }}

@@ -57,5 +57,5 @@ jobs:
       conan_deploy_package: ${{ inputs.conan_deploy_package }}
       is_proxy_recipe: ${{ contains(inputs.tool, '-proxy') }}
     secrets:
-      conan_user: 'iceshard'
+      conan_user: ${{ secrets.CONAN_USER }}
       conan_token: ${{ secrets.CONAN_TOKEN }}
