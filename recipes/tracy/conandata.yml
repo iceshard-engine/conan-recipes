@@ -23,3 +23,6 @@ sources:
   "0.13.0":
     url: "https://github.com/wolfpld/tracy.git"
     tag: "v0.13.0"
+  "0.13.1":
+    url: "https://github.com/wolfpld/tracy.git"
+    tag: "v0.13.1"
