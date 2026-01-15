@@ -11,7 +11,7 @@ class FASTBuildInstallerConan(ConanFile):
     settings = "os"
 
     def generate(self):
-        get(self, **self.conan_data["sources"][str(self.settings.os)][self.version])
+        get(self, **self.conan_data["sources"][self.version][str(self.settings.os)])
 
     def package(self):
         copy(self, "LICENSE.TXT", src=".", dst=os.path.join(self.package_folder, "LICENSES"))

@@ -1,64 +1,85 @@
 sources:
-  Windows:
-    "0.99":
-      url: "https://fastbuild.org/downloads/v0.99/FASTBuild-Windows-x64-v0.99.zip"
-    "1.00":
-      url: "https://fastbuild.org/downloads/v1.00/FASTBuild-Windows-x64-v1.00.zip"
-    "1.02":
-      url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Windows-x64-v1.02.zip"
-    "1.03":
-      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Windows-x64-v1.03.zip"
-    "1.04":
-      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Windows-x64-v1.04.zip"
-    "1.05":
-      url: "https://fastbuild.org/downloads/v1.05/FASTBuild-Windows-x64-v1.05.zip"
-    "1.06":
-      url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Windows-x64-v1.06.zip"
-    "1.07":
-      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Windows-x64-v1.07.zip"
-    "1.08":
-      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Windows-x64-v1.08.zip"
-    "1.09":
-      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-Windows-x64-v1.09.zip"
-    "1.10":
-      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Windows-x64-v1.10.zip"
-    "1.11":
-      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Windows-x64-v1.11.zip"
-    "1.12":
+  "1.18":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.18/FASTBuild-Windows-x64-v1.18.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.18/FASTBuild-Linux-x64-v1.18.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.18/FASTBuild-OSX-x64-v1.18.zip"
+  "1.17":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.17/FASTBuild-Windows-x64-v1.17.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.17/FASTBuild-Linux-x64-v1.17.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.17/FASTBuild-OSX-x64-v1.17.zip"
+  "1.16":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.16/FASTBuild-Windows-x64-v1.16.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.16/FASTBuild-Linux-x64-v1.16.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.16/FASTBuild-OSX-x64-v1.16.zip"
+  "1.15":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.15/FASTBuild-Windows-x64-v1.15.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.15/FASTBuild-Linux-x64-v1.15.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.15/FASTBuild-OSX-x64-v1.15.zip"
+  "1.14":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.14/FASTBuild-Windows-x64-v1.14.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.14/FASTBuild-Linux-x64-v1.14.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.14/FASTBuild-OSX-x64-v1.14.zip"
+  "1.13":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.13/FASTBuild-Windows-x64-v1.13.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.13/FASTBuild-Linux-x64-v1.13.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.13/FASTBuild-OSX-x64-v1.13.zip"
+  "1.12":
+    Windows:
       url: "https://fastbuild.org/downloads/v1.12/FASTBuild-Windows-x64-v1.12.zip"
-  Linux:
-    "1.02":
-      url: "https://fastbuild.org/downloads/v1.02/FASTBuild-Linux-x64-v1.02.zip"
-    "1.03":
-      url: "https://fastbuild.org/downloads/v1.03/FASTBuild-Linux-x64-v1.03.zip"
-    "1.04":
-      url: "https://fastbuild.org/downloads/v1.04/FASTBuild-Linux-x64-v1.04.zip"
-    "1.05":
-      url: "https://fastbuild.org/downloads/v1.05/FASTBuild-Linux-x64-v1.05.zip"
-    "1.06":
-      url: "https://fastbuild.org/downloads/v1.06/FASTBuild-Linux-x64-v1.06.zip"
-    "1.07":
-      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Linux-x64-v1.07.zip"
-    "1.08":
-      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Linux-x64-v1.08.zip"
-    "1.09":
-      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-Linux-x64-v1.09.zip"
-    "1.10":
-      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Linux-x64-v1.10.zip"
-    "1.11":
-      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Linux-x64-v1.11.zip"
-    "1.12":
+    Linux:
       url: "https://fastbuild.org/downloads/v1.12/FASTBuild-Linux-x64-v1.12.zip"
-  Macos:
-    "1.07":
-      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-OSX-x64-v1.07.zip"
-    "1.08":
-      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-OSX-x64-v1.08.zip"
-    "1.09":
-      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-OSX-x64-v1.09.zip"
-    "1.10":
-      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-OSX-x64-v1.10.zip"
-    "1.11":
-      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-OSX-x64-v1.11.zip"
-    "1.12":
+    Macos:
       url: "https://fastbuild.org/downloads/v1.12/FASTBuild-OSX-x64-v1.12.zip"
+  "1.11":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Windows-x64-v1.11.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-Linux-x64-v1.11.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.11/FASTBuild-OSX-x64-v1.11.zip"
+  "1.10":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Windows-x64-v1.10.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-Linux-x64-v1.10.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.10/FASTBuild-OSX-x64-v1.10.zip"
+  "1.09":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-Windows-x64-v1.09.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-Linux-x64-v1.09.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.09/FASTBuild-OSX-x64-v1.09.zip"
+  "1.08":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Windows-x64-v1.08.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-Linux-x64-v1.08.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.08/FASTBuild-OSX-x64-v1.08.zip"
+  "1.07":
+    Windows:
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Windows-x64-v1.07.zip"
+    Linux:
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-Linux-x64-v1.07.zip"
+    Macos:
+      url: "https://fastbuild.org/downloads/v1.07/FASTBuild-OSX-x64-v1.07.zip"
