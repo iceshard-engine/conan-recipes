@@ -65,3 +65,11 @@ sources:
   "1.92.4.docking":
     url: "https://github.com/ocornut/imgui.git"
     tag: "v1.92.4-docking"
+    
+  "1.92.5":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.5"
+  "1.92.4.docking":
+    url: "https://github.com/ocornut/imgui.git"
+    tag: "v1.92.5-docking"
+
