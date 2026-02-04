@@ -23,6 +23,7 @@ class SDL2Conan(ConanFile):
     }
 
     # Default user and channel values
+    version_default = "2.32.10"
     user = "iceshard"
     channel = "stable"
 
@@ -32,6 +33,9 @@ class SDL2Conan(ConanFile):
 
     ice_generator = "cmake"
     ice_toolchain = "cmake"
+
+    def set_version(self):
+        self.version = self.version or self.version_default
 
     def system_requirements(self):
         # On linux systems we want to build SDL2 with Wayland support (all required packages)
@@ -86,10 +90,11 @@ class SDL2Conan(ConanFile):
         self.ice_copy("COPYING.txt", src=".", dst="LICENSES") # (? before 2.0.22)
         self.ice_copy("LICENSE*", src=".", dst="LICENSES") # (starting from 2.0.22)
         self.ice_copy("*.h", src="include", dst="include", keep_path=True)
-        # Copy config files later, because they will replace the default ones.
-        self.ice_copy("SDL_config.h", src="{}/include".format(self.build_folder), dst="include", keep_path=False)
 
     def ice_package_artifacts(self):
+        # Copy config files later, because they will replace the default ones.
+        self.ice_copy("SDL_config.h", src="include-config-{}/SDL2".format(str(self.settings.build_type).lower()), dst="include", keep_path=False)
+
         self.ice_copy("*.dll", src=".", dst="bin", keep_path=False)
         self.ice_copy("*.lib", src=".", dst="lib", keep_path=False)
         self.ice_copy("*.so*", src=".", dst="bin", keep_path=False)
