@@ -17,15 +17,17 @@ class TracyConan(ConanFile):
         "shared":[True, False],
         "fibers":[True, False],
         "manual_lifetime":[True, False],
+        "timer_fallback":[True, False],
         "no_system_tracing":[True, False],
-        "no_sampling":[True, False]
+        "no_sampling":[True, False],
     }
     default_options = {
         "shared":True,
         "fibers":False,
         "manual_lifetime":False,
+        "timer_fallback": False,
         "no_system_tracing":False,
-        "no_sampling":False
+        "no_sampling":False,
     }
 
     # Iceshard conan tools
@@ -44,6 +46,7 @@ class TracyConan(ConanFile):
         toolchain.variables['TRACY_FIBERS'] = self.options.fibers
         toolchain.variables['TRACY_MANUAL_LIFETIME'] = self.options.manual_lifetime
         toolchain.variables['TRACY_DELAYED_INIT'] = self.options.manual_lifetime
+        toolchain.variables['TRACY_TIMER_FALLBACK'] = self.options.timer_fallback
         toolchain.variables['TRACY_NO_SYSTEM_TRACING'] = self.options.no_system_tracing
         toolchain.variables['TRACY_NO_SAMPLING'] = self.options.no_sampling
 
@@ -80,6 +83,8 @@ class TracyConan(ConanFile):
             self.cpp_info.defines.append('TRACY_NO_SYSTEM_TRACING')
         if self.options.no_sampling:
             self.cpp_info.defines.append('TRACY_NO_SAMPLING')
+        if self.options.timer_fallback:
+            self.cpp_info.defines.append('TRACY_TIMER_FALLBACK')
 
         if self.options.shared:
             self.cpp_info.bindirs = ['bin']
