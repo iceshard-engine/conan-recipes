@@ -13,6 +13,7 @@ class Catch2Conan(ConanFile):
     # Settings and options
     settings = "os", "compiler", "arch", "build_type"
 
+    version_default = "3.12.0"
     options = {"with_main":[True, False]}
     default_options = {"with_main":True}
 
@@ -22,6 +23,9 @@ class Catch2Conan(ConanFile):
 
     ice_generator = "cmake"
     ice_toolchain = "ninja"
+
+    def set_version(self):
+        self.version = self.version or self.version_default
 
     def package_id(self):
         del self.info.options.with_main
@@ -44,7 +48,9 @@ class Catch2Conan(ConanFile):
     def package_info(self):
         lib_suffix = "d" if self.settings.build_type == "Debug" else ""
 
-        self.cpp_info.libs = [ "Catch2" + lib_suffix ]
+        # We need to all the main library first, as it has dependencies on the actual Catch2 library.
+        #   This allows on linux to properly link without using link groups 
         if self.options.with_main:
             self.cpp_info.libs.append("Catch2Main" + lib_suffix)
+        self.cpp_info.libs.append("Catch2" + lib_suffix)
         # else: Manual (do nothing, we need to provide it manually)
